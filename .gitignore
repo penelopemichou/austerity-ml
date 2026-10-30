@@ -1,14 +1,4 @@
-# Data (not shared)
-data/
-*.csv
-*.xlsx
-*.zip
-
-# Python / Jupyter
-__pycache__/
 .ipynb_checkpoints/
-.venv/
-venv/
-
-# macOS
+__pycache__/
 .DS_Store
+*.pyc
