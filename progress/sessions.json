@@ -1,0 +1,15 @@
+[
+  {"session": 1, "status": "Done", "date": "2026-10-30", "course": "Course 1, Week 1",
+   "title": "One input: does budget tightening predict productivity growth?",
+   "plain": "Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the following two years, then tested it on countries the model had never seen.",
+   "lesson": "The effect is real (negative and statistically significant), but as a predictor it is barely better than guessing the average. Significant is not the same as predictive.",
+   "notebook": "notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb"},
+  {"session": 2, "status": "Next", "date": "", "course": "Course 1, Week 2",
+   "title": "Several inputs at once",
+   "plain": "Add the four control variables from the thesis and a yes/no 'consolidation episode' flag, and put all inputs on the same scale so the model learns properly.",
+   "lesson": "", "notebook": ""},
+  {"session": 3, "status": "Later", "date": "", "course": "Course 1, Week 3",
+   "title": "A yes/no question: which consolidations hurt growth?",
+   "plain": "Switch from predicting a number to predicting a category: is a consolidation followed by below-median TFP growth?",
+   "lesson": "", "notebook": ""}
+]

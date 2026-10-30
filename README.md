@@ -25,6 +25,8 @@ Annual panel of 26 EU member states (EU minus Czech Republic), 1995–2024.
 
 ## Sessions
 
+A plain-language overview with a roadmap and the results so far is in [PROGRESS.md](PROGRESS.md).
+
 | # | Notebook | Course link | What I found |
 |---|---|---|---|
 | 1 | `ML01_dCAPB_to_TFP_linear_regression` | C1 Week 1: linear regression, cost function, gradient descent | See below |
@@ -43,6 +45,7 @@ Annual panel of 26 EU member states (EU minus Czech Republic), 1995–2024.
 notebooks/   one Colab notebook per session (ML01_, ML02_, ...)
 data/        analysis panel and source notes
 notes/       learning logs
+progress/    session plan, results and log (feed PROGRESS.md and my dashboard)
 ```
 
 ## Author
