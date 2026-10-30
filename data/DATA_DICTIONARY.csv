@@ -1,0 +1,24 @@
+column,description,unit,lp_transformation,role,source,source_code,raw_file
+country,EU member state (26; EU minus Czech Republic),name,identifier,key,—,—,—
+year,Calendar year 1995–2024,year,identifier,key,—,—,—
+capb_main,Cyclically adjusted primary balance,% of potential GDP,level,fiscal,AMECO,UBLGBP,CAPB_UBLGBP.xlsx
+dcapb_main,Annual change in CAPB (fiscal shock source),pp of GDP,level,fiscal shock,AMECO,ΔUBLGBP,CAPB_UBLGBP.xlsx
+episode (derived),1 if dcapb_main >= 1.5 pp of GDP else 0,0/1,indicator,treatment,derived,—,episode_identification.csv
+tfp,Total factor productivity,index,log-difference,Ch.1 main,AMECO,ZVGDF,TFP_ZVGDF.xlsx
+outputperworker,GDP per person employed (constant prices),index,log-difference,Ch.1 robust,AMECO,RVGDE,output_per_worker_RVGDE.xlsx
+gfcf_public,General government gross fixed capital formation,% of GDP,log-difference of share,Ch.2 main,AMECO,UIGG0,public_GFCF_UIGG0.xlsx
+gfcf_private,Private gross fixed capital formation (100*UIGP/UVGD),% of GDP,log-difference of share,Ch.2 robust,AMECO,UIGP/UVGD,private_GFCF_UIGP_UVGD.xlsx
+unemployment,Unemployment rate,% active population,level / change,Ch.3 main,AMECO,ZUTN,unemployment_ZUTN.xlsx
+real_compensation,Real compensation per employee (GDP deflator),index,log-difference,Ch.3 robust,AMECO,RWCDV,real_compensation_RWCDV.xlsx
+rd_intensity,Gross domestic expenditure on R&D,% of GDP,log-difference,Ch.4 main,Eurostat,sdg_09_10 (GERD),RD_intensity_sdg_09_10.xlsx
+exports,Exports volume index,2015=100,log-difference,Ch.4 robust,AMECO,export-volume index,exports_VXGSP.xlsx
+gini_disp,Gini coefficient of disposable income,Gini points,level / change,Cohesion main,SWIID,disposable-income Gini,gini_disp_SWIID.csv
+consumer_confidence,Consumer confidence balance (annual mean of monthly),balance index,level / change,Cohesion 2nd,DG ECFIN,BCS consumer confidence,consumer_confidence.csv
+gdp_growth,Real GDP growth,%,lagged control,control,AMECO,—,controls.csv
+debt_gdp,General government gross debt,% of GDP,lagged control,control,AMECO,—,controls.csv
+inflation,Inflation rate,%,lagged control,control,AMECO,—,controls.csv
+trade_open,Trade openness (exports+imports)/GDP,%,lagged control,control,AMECO,—,controls.csv
+long_rate,Long-term interest rate,%,auxiliary,auxiliary,AMECO,—,controls.csv
+net_exports_gdp,Net exports,% of GDP,auxiliary,auxiliary,AMECO,—,controls.csv
+gini_disp_se,SWIID Gini standard error,Gini points,auxiliary,auxiliary,SWIID,—,gini_disp_SWIID.csv
+n_months,Months averaged for annual consumer confidence,count,auxiliary,auxiliary,DG ECFIN,—,consumer_confidence.csv
