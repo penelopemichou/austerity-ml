@@ -51,3 +51,5 @@ progress/    session plan, results and log (feed PROGRESS.md and my dashboard)
 ## Author
 
 Pinelopi (Penelope) Michou · MSc Management of Technology, TU Delft
+
+The code in this repo was written with help from [Claude Code](https://claude.com/claude-code).
