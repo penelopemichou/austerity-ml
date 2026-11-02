@@ -42,6 +42,42 @@ Results that cross a significance line (out of 50 baseline cells at h ≥ 0 and 
 
 Every baseline number is in `controls_correction_baseline.csv`.
 
+## Teulings–Zubanov, threshold and sample checks
+
+I re-ran these three checks on both panels. **No main conclusion changes:** only 6 of the 120 results change significance stars, all marginally. Coefficients are in % for log outcomes and native units otherwise. The code stores only coefficients for the threshold and sample tables, so I added p-values using the baseline method (country-clustered, t with 25 degrees of freedom), and applied the same method to Teulings–Zubanov. They may not match the stars printed in the thesis exactly.
+
+| Check | Results | Biggest coefficient change | Sign flips | Star changes |
+|---|---|---|---|---|
+| Teulings–Zubanov | 30 | 0.57 | 0 | 3 |
+| Threshold (1.0 / 1.5 / 2.0) | 45 | 0.73 | 1 | 1 |
+| Sample (full / no Greece / no CEE) | 45 | 0.70 | 0 | 2 |
+
+The largest coefficient changes are all in public investment, on estimates of about −9 to −14, and those stay significant at 1 %. The one sign flip is consumer confidence at threshold 1.0, h = 2 (+0.03 to −0.01, p about 0.98).
+
+| TFP at h = 2 | Submitted | Corrected | Corrected p |
+|---|---|---|---|
+| Baseline | −1.50 % | −1.53 % | 0.004 |
+| Teulings–Zubanov | −1.67 % | −1.69 % | 0.003 |
+| Threshold 1.0 | −1.64 % | −1.64 % | 0.001 |
+| Threshold 2.0 | −2.14 % | −2.22 % | 0.001 |
+| No Greece | −1.28 % | −1.32 % | 0.009 |
+| No CEE | −0.75 % | −0.78 % | 0.262 |
+
+The six star changes:
+
+| Check | Result | Submitted | Corrected |
+|---|---|---|---|
+| Teulings–Zubanov | Unemployment, h = 2 | +0.67, p = 0.056 | +0.73, p = 0.046 |
+| Teulings–Zubanov | Real compensation, h = 4 | −1.89 %, p = 0.008 | −1.78 %, p = 0.017 |
+| Teulings–Zubanov | Gini, h = 4 | +0.31, p = 0.011 | +0.31, p = 0.009 |
+| Threshold 1.0 | Consumer confidence, h = 4 | +1.58, p = 0.088 | +1.45, p = 0.110 |
+| No Greece | Real compensation, h = 4 | −1.03 %, p = 0.038 | −0.90 %, p = 0.070 |
+| No CEE | Gini, h = 2 | +0.21, p = 0.055 | +0.21, p = 0.045 |
+
+One sensitivity was already there before the correction: without the CEE countries, TFP at h = 2 is not significant (−0.78 %, p = 0.262), and neither is real compensation (−0.96 %, p = 0.115). So the medium-term TFP result leans on the CEE countries.
+
+Every number is in `controls_correction_robustness.csv`.
+
 ## A separate label issue
 
 The `exports` column is AMECO's *market performance of exports on export-weighted imports* (VXGSP), not an export volume index as the thesis text and the old data dictionary describe it. The dictionary here is now corrected. Re-running with true export volume (OXGS) gives the same conclusion: no significant effect at any horizon.
