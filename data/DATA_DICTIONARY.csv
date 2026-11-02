@@ -11,14 +11,14 @@ gfcf_private,Private gross fixed capital formation (100*UIGP/UVGD),% of GDP,log-
 unemployment,Unemployment rate,% active population,level / change,Ch.3 main,AMECO,ZUTN,unemployment_ZUTN.xlsx
 real_compensation,Real compensation per employee (GDP deflator),index,log-difference,Ch.3 robust,AMECO,RWCDV,real_compensation_RWCDV.xlsx
 rd_intensity,Gross domestic expenditure on R&D,% of GDP,log-difference,Ch.4 main,Eurostat,sdg_09_10 (GERD),RD_intensity_sdg_09_10.xlsx
-exports,Exports volume index,2015=100,log-difference,Ch.4 robust,AMECO,export-volume index,exports_VXGSP.xlsx
+exports,Market performance of exports on export-weighted imports (not an export volume index),2020=100,log-difference,Ch.4 robust,AMECO,VXGSP,exports_VXGSP.xlsx
 gini_disp,Gini coefficient of disposable income,Gini points,level / change,Cohesion main,SWIID,disposable-income Gini,gini_disp_SWIID.csv
 consumer_confidence,Consumer confidence balance (annual mean of monthly),balance index,level / change,Cohesion 2nd,DG ECFIN,BCS consumer confidence,consumer_confidence.csv
 gdp_growth,Real GDP growth,%,lagged control,control,AMECO,—,controls.csv
 debt_gdp,General government gross debt,% of GDP,lagged control,control,AMECO,—,controls.csv
-inflation,Inflation rate,%,lagged control,control,AMECO,—,controls.csv
-trade_open,Trade openness (exports+imports)/GDP,%,lagged control,control,AMECO,—,controls.csv
+inflation,Inflation: % change in the private consumption deflator in national currency (corrected),%,lagged control,control,AMECO,PCPH,ameco0.zip (2 Jun 2026)
+trade_open,Trade openness: 100*(exports+imports)/GDP at current prices in national currency (corrected),%,lagged control,control,AMECO,UXGS+UMGS/UVGD,ameco0.zip (2 Jun 2026)
 long_rate,Long-term interest rate,%,auxiliary,auxiliary,AMECO,—,controls.csv
-net_exports_gdp,Net exports,% of GDP,auxiliary,auxiliary,AMECO,—,controls.csv
+net_exports_gdp,Net exports: 100*(exports-imports)/GDP at current prices in national currency (corrected),% of GDP,auxiliary,auxiliary,AMECO,UXGS-UMGS/UVGD,ameco0.zip (2 Jun 2026)
 gini_disp_se,SWIID Gini standard error,Gini points,auxiliary,auxiliary,SWIID,—,gini_disp_SWIID.csv
 n_months,Months averaged for annual consumer confidence,count,auxiliary,auxiliary,DG ECFIN,—,consumer_confidence.csv

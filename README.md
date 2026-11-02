@@ -43,11 +43,10 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 ### Session 2: several inputs (ΔCAPB + four lagged controls + episode flag)
 
 - Vectorized gradient descent matches scikit-learn. Z-score scaling uses the training countries only, and α = 1.0 was chosen on training data from values about ×3 apart.
-- On the same six hidden countries the model beats "predict the average" by 10.0 %, against 1.1 % for Session 1's model on the same rows. **That is mostly a lucky split:** with each country hidden in turn it wins 16 of 26 but is 1.1 % *worse* overall, and across 500 random splits it beats the average only 54 % of the time.
-- The controls do the predicting. Adding ΔCAPB and the flag to them changes almost nothing.
-- The effect per average episode moves closer to the thesis: −1.36 %, against −0.93 % for ΔCAPB alone on the same rows. Flag + controls, the thesis design, gives −1.49 % (thesis: −1.50 %).
-- Adding ΔCAPB² does not catch the threshold in a useful way. It fits better within the sample, but much of that comes from Ireland 2010–11 (t falls from −5.4 to −1.9), a parabola wrongly says large loosening hurts too, and prediction does not improve.
-- **Data warning:** `trade_open` and `inflation` look wrong for some non-euro countries, possibly because of a currency mismatch. I have not confirmed the cause or changed the data. See the [session log](notes/session02_log.md).
+- On the same six hidden countries the model beats "predict the average" by 8.6 %, against 1.1 % for Session 1's model on the same rows. **That is a lucky split:** with each country hidden in turn it wins 13 of 26 and is 48.7 % *worse* overall, mostly because of Bulgaria's 1997 hyperinflation, and still 7.4 % worse with inflation capped. Across 500 random splits it beats the average only 38 % of the time.
+- The effect per average episode moves close to the thesis: −1.38 %, against −0.93 % for ΔCAPB alone on the same rows. Flag + controls, the thesis design, gives −1.52 % (thesis: −1.50 %).
+- Adding ΔCAPB² does not catch the threshold in a useful way. It fits better within the sample, but much of that comes from Ireland 2010–11 (t falls from −7.1 to −1.6), a parabola wrongly says large loosening hurts too, and prediction does not improve.
+- **Data correction:** this session exposed two wrongly built controls, trade openness and inflation. They are now fixed. Re-running my thesis code on the corrected panel leaves the main findings in place (TFP at h = 2: −1.50 % becomes −1.53 %). See [the correction note](notes/controls_correction.md).
 - Verdict: ML still adds nothing reliable over the econometrics.
 
 ## Structure

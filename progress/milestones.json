@@ -1,6 +1,6 @@
 [
+  {"date": "2026-11-02", "step": "Corrected trade openness and inflation in the panel; re-ran the thesis code: main findings hold (TFP at h = 2: −1.50 % to −1.53 %)"},
   {"date": "2026-11-02", "step": "Session 2 notebook finished: several inputs, scaling, vectorized gradient descent"},
-  {"date": "2026-11-02", "step": "Found suspicious trade_open and inflation values in non-euro countries; still to be checked at the source"},
   {"date": "2026-10-30", "step": "Session 1 notebook finished and saved to GitHub"},
   {"date": "2026-10-30", "step": "Public GitHub repo created: penelopemichou/austerity-ml"},
   {"date": "2026-10-30", "step": "Data licences checked; thesis panel added to the repo with credits"},

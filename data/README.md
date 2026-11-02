@@ -19,6 +19,10 @@ DATA_URL = "https://raw.githubusercontent.com/penelopemichou/austerity-ml/main/d
 
 SWIID citation: Solt, Frederick. 2020. "Measuring Income Inequality Across Countries and Over Time: The Standardized World Income Inequality Database." *Social Science Quarterly* 101(3): 1183–1199.
 
+## Correction, 2 Nov 2026
+
+`trade_open`, `inflation` and `net_exports_gdp` were rebuilt because the versions in my submitted thesis mixed currencies and price bases. See [the correction note](../notes/controls_correction.md). `fix_controls.py` rebuilds them from AMECO's bulk file (release of 2 June 2026). The panel as used in the submitted thesis is at commit `5787f6a`.
+
 ## Changes from the original sources
 
-The panel is my own compilation, not the original releases. I merged the series into one country-year table, computed `dcapb_main` as the year-on-year change in `capb_main`, computed `gfcf_private` as 100 × UIGP / UVGD, and averaged monthly consumer confidence to annual values (`n_months` = months averaged). The European Commission, Eurostat and the SWIID author are not responsible for these changes or for any errors in them.
+The panel is my own compilation, not the original releases. I merged the series into one country-year table, computed `dcapb_main` as the year-on-year change in `capb_main`, computed `gfcf_private` as 100 × UIGP / UVGD, averaged monthly consumer confidence to annual values (`n_months` = months averaged), and computed trade openness, net exports and inflation from AMECO's national-currency series. The European Commission, Eurostat and the SWIID author are not responsible for these changes or for any errors in them.

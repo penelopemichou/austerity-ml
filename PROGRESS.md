@@ -4,7 +4,7 @@
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** 2 of 3 planned sessions are done. The effect estimate is now close to my thesis, but the model still does not reliably predict better than guessing the average. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** 2 of 3 planned sessions are done. The effect estimate is now close to my thesis, but the model still does not predict better than guessing the average. A data error in two controls was found and fixed along the way. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -45,11 +45,13 @@ I split the data **by country**, never by random rows. The growth figures overla
 |---|---|---|---|---|
 | 1 | ΔCAPB only | 1.2 % | 13 of 26 | +0.4 % |
 | 1 | ΔCAPB only, on Session 2's rows | 1.1 % | 15 of 26 | +0.5 % |
-| 2 | Controls only, no ΔCAPB | 9.3 % | 17 of 26 | −1.1 % |
-| **2** | **ΔCAPB + controls + flag** | **10.0 %** | **16 of 26** | **−1.1 %** |
-| 2 | Same, plus ΔCAPB² | 9.8 % | 16 of 26 | −1.6 % |
+| 2 | Controls only, no ΔCAPB | 7.9 % | 13 of 26 | −46.7 % |
+| **2** | **ΔCAPB + controls + flag** | **8.6 %** | **13 of 26** | **−48.7 %** |
+| 2 | Same, plus ΔCAPB² | 8.5 % | 13 of 26 | −49.3 % |
+| 2 | Same, inflation capped at ±30 % | 7.1 % | 14 of 26 | −7.4 % |
+| 2 | Same, before the data correction | 10.0 % | 16 of 26 | −1.1 % |
 
-**In plain words:** the 10 % looks like a big jump, but it is mostly a lucky choice of hidden countries. Across 500 random sets of six countries, the typical gain is only 1.6 %, and the model beats the guess just 54 % of the time. It helps a lot in some countries (Belgium, Italy) and hurts a lot in others (Luxembourg, Denmark, Ireland). The controls do most of the work, and knowing the size of the budget tightening adds almost nothing to the forecast.
+**In plain words:** the 8.6 % looks like a jump, but it is a lucky choice of hidden countries. Across 500 random sets of six countries, the typical result is 7.2 % *worse* than guessing, and the model beats the guess just 38 % of the time. The very large −48.7 % comes mostly from Bulgaria, whose 1997 hyperinflation (about 1,040 %) is far outside what the model saw in training. Even without that extreme, the model still loses to the simple guess overall.
 
 ### How big is the effect?
 
@@ -58,9 +60,9 @@ Estimated change in TFP two years after an average consolidation, comparing each
 | Session | Model | TFP change |
 |---|---|---|
 | 1 | ΔCAPB only | −0.89 % |
-| 2 | ΔCAPB + controls + flag | −1.36 % |
-| 2 | Same, plus ΔCAPB² | −1.46 % |
-| 2 | Flag + controls (the thesis design) | −1.49 % |
+| 2 | ΔCAPB + controls + flag | −1.38 % |
+| 2 | Same, plus ΔCAPB² | −1.49 % |
+| 2 | Flag + controls (the thesis design) | −1.52 % |
 | Benchmark | My thesis (local projection) | −1.50 % |
 
 **In plain words:** with the controls and the flag, the estimate moves close to my thesis. A better estimate of an effect is not the same as a better forecast.
@@ -69,16 +71,16 @@ Estimated change in TFP two years after an average consolidation, comparing each
 
 Only partly, and it does not help prediction. Within the data it fits better, but much of that comes from Ireland's 2010–11 bank-rescue years. A squared term also says a big loosening hurts as much as a big tightening, while the actual averages stay flat for loosening and fall sharply only from about 3 pp of tightening.
 
-### A data problem to check
+### A data error, found and fixed
 
-Trade openness looks far too low in five non-euro countries (Sweden about 8 % of GDP, Hungary about 0.4 %). Inflation also looks off in some non-euro countries (Poland 2009: −16.5 %). A currency mismatch would fit this pattern, but I have not confirmed the cause or changed the data. Leaving out both controls barely moves the effect estimate (thesis design: −1.48 %). In the each-hidden-in-turn test, the Session 2 model goes from −1.1 % to +2.7 % overall, a warning about the data rather than a better model.
+Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
 
 ## What each session taught me
 
 | Session | What I did | What I learned |
 |---|---|---|
 | 1 ([notebook](notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb), [log](notes/session01_log.md)) | Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the next two years, and tested it on countries the model had never seen. | The effect is real but barely better than guessing as a predictor. **Significant is not the same as predictive.** |
-| 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not reliably improve. **One test can flatter a model.** |
+| 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
 | 3 | *Next:* predict a yes/no outcome: is a consolidation followed by below-median TFP growth? | |
 
 ## Words used here
