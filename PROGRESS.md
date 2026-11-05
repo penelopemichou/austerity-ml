@@ -1,6 +1,6 @@
 # Progress
 
-*Last updated: 5 Nov 2026, after Session 3 and its year-adjusted check.*
+*Last updated: 5 Nov 2026, after Session 3 and its year-adjusted and pre-trend checks.*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
@@ -96,6 +96,18 @@ A yes/no version of the question. Out of the 96 consolidation episodes, which on
 
 **In plain words:** with the timing taken out, the model beats the guess in only about half the countries and half the random splits, a coin flip. The accuracy numbers still look better than the guess, but that guess is wrong more than half the time here, so it is an easy bar. Most of what the model had found was the crisis years.
 
+**Does growth before predict growth after?** My thesis found that consolidating countries were already falling behind before they tightened (a *pre-trend*). So I added one input: TFP growth in the two years before the episode, compared with other countries in the same year. The panel starts in 1995, so the five 1997 episodes have no "before" and are left out (91 remain). All three models below use the same 91.
+
+| Test | Without the pre-trend | Pre-trend only | Both together |
+|---|---|---|---|
+| Six hidden: log loss vs guess | 0.663 vs 0.702 | 0.668 vs 0.702 | 0.658 vs 0.702 |
+| Each hidden in turn: log loss vs guess | 0.671 vs 0.700 | 0.668 vs 0.700 | 0.670 vs 0.700 |
+| Each hidden in turn: accuracy vs guess | 60 % vs 48 % | 53 % vs 48 % | 56 % vs 48 % |
+| Countries where it beats the guess | 12 of 24 | 15 of 24 | 12 of 24 |
+| 500 random splits: beats the guess on log loss | 38 % of splits | 67 % of splits | 41 % of splits |
+
+**In plain words:** growth before an episode carries a faint signal: countries that were growing faster before were less often weak after. On its own it is the steadiest of the three, but the gain is small and could be chance. Adding it to the other inputs does not help. Leaving out just five episodes also shrank the earlier result a lot, which shows how fragile small samples are.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -106,7 +118,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 |---|---|---|
 | 1 ([notebook](notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb), [log](notes/session01_log.md)) | Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the next two years, and tested it on countries the model had never seen. | The effect is real but barely better than guessing as a predictor. **Significant is not the same as predictive.** |
 | 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
-| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | A small gain over the simple guess, which mostly disappears when each episode is compared with its own year: it was recognising the crisis years. **A model can predict for the wrong reason.** |
+| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | A small gain over the simple guess, which mostly disappears when each episode is compared with its own year: it was recognising the crisis years. Growth before the episode adds only a faint signal. **A model can predict for the wrong reason.** |
 
 ## Words used here
 
@@ -123,6 +135,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **Logistic regression:** a model that gives a probability (here, the chance of weak growth) instead of a number.
 - **Log loss:** a score for probability predictions. Lower is better, and being confidently wrong costs the most.
 - **Regularization (λ):** a penalty that keeps the model's weights small, so it does not fit noise in a small sample.
+- **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
 - **Learning curve:** a chart of the model's error during training. It should fall, then go flat.
 
 The numbers in this file come from [`progress/`](progress/), which also feeds my private progress dashboard. Both are updated after every session.

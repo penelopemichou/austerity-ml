@@ -58,6 +58,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - ΔCAPB adds little: controls alone do as well. Only lagged inflation is significant (p = 0.049).
 - Part of the signal is timing: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007. So this is a weak predictor, not evidence about which consolidations *cause* weaker growth.
 - **Year-adjusted check:** comparing each episode with the median of training countries *in the same year* removes the timing pattern. The pooled log loss still looks better (0.638 vs 0.700), but the model now wins in only 13 of 24 countries and in 52 % of 500 random splits (median gain +0.2 %). No input is significant at 5 %. Most of the Session 3 signal was timing.
+- **Pre-trend check:** adding TFP growth before the episode (t−3 to t−1, year-adjusted the same way) costs 5 episodes from 1997, leaving 91. On those, the pre-trend alone is the steadiest model (15 of 24 countries, 67 % of random splits), but its gain is small (median +2.4 %) and not significant (p = 0.48). Faster growth before goes with less weak growth after. Adding it to the other inputs does not help (12 of 24, 41 % of splits).
 - Verdict: ML still adds nothing reliable over the econometrics.
 
 ## Structure

@@ -54,11 +54,34 @@
 - Logit on all 96 episodes: no input is significant at 5 % any more. Inflation is the closest (p = 0.092); ΔCAPB has p = 0.366.
 - **Conclusion:** most of the Session 3 signal was timing. Once each episode is compared with its own year, what is left is weak and unsteady, and ML still adds nothing reliable over the econometrics.
 
+**Pre-trend check (added 5 Nov 2026), building on the year-adjusted version**
+- One extra input: TFP growth before the episode, 100 × (ln TFP[t−1] − ln TFP[t−3]). It ends where the target window starts, so the two do not overlap. It is year-adjusted like the target: relative to the median of training-country observations in the same year, recalculated without the hidden countries each time.
+- **5 of the 96 episodes are lost** because TFP at t−3 is missing: Austria, Bulgaria, Italy, Romania and Slovakia, all in 1997 (the panel starts in 1995). 91 episodes in 24 countries remain. All three models use these 91, so they can be compared directly. Everything else is as in the year-adjusted check (α the same for every λ).
+
+| Test | Section 11 reference: year-adjusted original, 96 episodes | Year-adjusted original, 91 episodes | Pre-trend only, 91 episodes | Year-adjusted original + pre-trend, 91 episodes |
+|---|---|---|---|---|
+| λ chosen | 10 | 10 | 0.1 | 10 |
+| Six hidden: log loss vs baseline | 0.674 vs 0.718 | 0.663 vs 0.702 (+5.5 %) | 0.668 vs 0.702 (+4.8 %) | 0.658 vs 0.702 (+6.2 %) |
+| Six hidden: accuracy vs baseline | 56 % vs 40 % | 58 % vs 42 % | 54 % vs 42 % | 58 % vs 42 % |
+| Each hidden in turn: log loss vs baseline | 0.638 vs 0.700 (+8.8 %) | 0.671 vs 0.700 (+4.3 %) | 0.668 vs 0.700 (+4.7 %) | 0.670 vs 0.700 (+4.3 %) |
+| Each hidden in turn: accuracy vs baseline | 60.4 % vs 42.7 % | 60.4 % vs 48.4 % | 52.7 % vs 48.4 % | 56.0 % vs 48.4 % |
+| Countries where log loss beats baseline | 13 of 24 | 12 of 24 | 15 of 24 | 12 of 24 |
+| 500 random splits: log loss better | 52 % (median +0.2 %) | 38 % (median −2.1 %) | 67 % (median +2.4 %) | 41 % (median −1.4 %) |
+| 500 random splits: accuracy better | 72 % (median +10.0 points) | 62 % (median +5.6 points) | 69 % (median +8.7 points) | 63 % (median +5.4 points) |
+
+- **Dropping five 1997 episodes alone moves the results a lot.** The year-adjusted original goes from +8.8 % to +4.3 % with each country hidden in turn, and from 52 % to 38 % of random splits. The earlier pooled gain was fragile.
+- **The pre-trend alone is the steadiest of the three, but small.** It beats the baseline in 15 of 24 countries and in 67 % of random splits, with a median gain of +2.4 %. Its accuracy (52.7 % with each country hidden in turn) is barely above a coin flip.
+- **Adding it to the other inputs does not help.** The combined model wins in 12 of 24 countries and 41 % of random splits, about the same as without it. With only 91 episodes, the extra inputs cost more than they add.
+- **Direction: persistence, not a bounce back.** Faster TFP growth before the episode goes with a lower chance of weak growth after (logit coefficient −0.052, p = 0.483, not significant). By thirds: 53 % weak after the slowest third, 60 % after the middle third, and 39 % after the fastest third, so the pattern is not even smooth. The shared t−1 endpoint would, if anything, push the other way (a blip at t−1 raises one window and lowers the other), so the mechanical overlap does not explain this sign.
+- No input is significant at 5 % in the combined logit (inflation p = 0.533, ΔCAPB p = 0.243).
+- **Conclusion:** past TFP growth carries a faint signal of its own, in line with the thesis caveat that countries diverge before they consolidate. But it is not significant, and it does not turn the model into a reliable predictor. ML still adds nothing reliable over the econometrics.
+
 **Main lessons**
 - Accuracy and log loss can tell different stories: log loss punishes confident mistakes.
 - Regularization (λ = 10) helped in a small, noisy sample.
 - Choosing α depends on λ. An α that works without regularization can blow up with a large λ.
 - A predictor can work for the wrong reason. Here it partly recognised the crisis years; the year-adjusted check removed most of the gain. The thesis pre-trend caveat still applies, so this is not evidence about which consolidations *cause* weaker growth.
 - A baseline that is wrong more than half the time is easy to beat. Check the accuracy against 50 % as well.
+- Small samples are fragile: removing five episodes halved the pooled gain. Read the steadiness tests (countries won, random splits), not one pooled number.
 
-**Next idea:** add TFP growth before the episode as an input, to test the pre-trend.
+**Next:** Course 1 is done. Course 2 (neural networks, decision trees) can be tested the same way, with the year-adjusted target and these honest baselines.
