@@ -33,6 +33,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 2 | `ML02_multiple_inputs_vectorized_gradient_descent` | C1 Week 2: multiple features, vectorization, feature scaling, learning rate | See below |
 | 3 | `ML03_logistic_regression_episode_classifier` | C1 Week 3: logistic regression, decision boundary, regularization | See below |
 | 3b | `ML03b_logistic_regression_practice` | C1 Week 3: practice exercises in the style of the course labs | Exercises with PASS/FAIL tests; solutions in `notes/ML03b_solutions.py` |
+| 3b | `ML03b_logistic_regression_practice_completed` | C1 Week 3: my own answers to the practice exercises | All 25 checks pass |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
