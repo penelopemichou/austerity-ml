@@ -57,6 +57,8 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **This time it holds up in the fairer test, but only just:** with each country hidden in turn, log loss is 0.647 vs 0.694 (+6.8 %) and accuracy 64.6 % vs 49 %. Across 500 random splits it beats the baseline on log loss in 60 % of them.
 - ΔCAPB adds little: controls alone do as well. Only lagged inflation is significant (p = 0.049).
 - Part of the signal is timing: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007. So this is a weak predictor, not evidence about which consolidations *cause* weaker growth.
+- **Year-adjusted check:** comparing each episode with the median of training countries *in the same year* removes the timing pattern. The pooled log loss still looks better (0.638 vs 0.700), but the model now wins in only 13 of 24 countries and in 52 % of 500 random splits (median gain +0.2 %). No input is significant at 5 %. Most of the Session 3 signal was timing.
+- Verdict: ML still adds nothing reliable over the econometrics.
 
 ## Structure
 

@@ -1,10 +1,10 @@
 # Progress
 
-*Last updated: 5 Nov 2026, after Session 3.*
+*Last updated: 5 Nov 2026, after Session 3 and its year-adjusted check.*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** all 3 planned sessions are done. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does slightly better than the simple guess, but partly because it recognises the crisis years. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** all 3 planned sessions are done. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does slightly better than the simple guess, but mostly because it recognises the crisis years: compared with its own year, its edge becomes a coin flip. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -83,6 +83,19 @@ A yes/no version of the question. Out of the 96 consolidation episodes, which on
 
 **In plain words:** this is the first model that does better than the simple guess even when every country takes a turn, but the gain is small and uneven. It works well for Italy and Romania and badly for Luxembourg and Latvia. The size of the consolidation adds little; the economic conditions around it do more of the work. Part of the signal is timing: episodes during the 2008–2013 crisis years were followed by weak growth much more often (64 %) than earlier ones (41 %). So the model partly recognises bad periods, and it tells us nothing about cause.
 
+**Taking the timing out.** To check, I compared each episode with the other countries in the *same year* instead of with all years. A crisis year then no longer counts as "weak" just because everyone was doing badly.
+
+| Test | Compared with all years | Compared with the same year |
+|---|---|---|
+| Six hidden: log loss vs guess | 0.670 vs 0.710 | 0.674 vs 0.718 |
+| Six hidden: accuracy vs guess | 60 % vs 40 % | 56 % vs 40 % |
+| Each hidden in turn: log loss vs guess | 0.647 vs 0.694 | 0.638 vs 0.700 |
+| Each hidden in turn: accuracy vs guess | 65 % vs 49 % | 60 % vs 43 % |
+| Countries where it beats the guess | 17 of 24 | 13 of 24 |
+| 500 random splits: beats the guess on log loss | 60 % of splits | 52 % of splits |
+
+**In plain words:** with the timing taken out, the model beats the guess in only about half the countries and half the random splits, a coin flip. The accuracy numbers still look better than the guess, but that guess is wrong more than half the time here, so it is an easy bar. Most of what the model had found was the crisis years.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -93,7 +106,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 |---|---|---|
 | 1 ([notebook](notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb), [log](notes/session01_log.md)) | Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the next two years, and tested it on countries the model had never seen. | The effect is real but barely better than guessing as a predictor. **Significant is not the same as predictive.** |
 | 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
-| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | A small gain over the simple guess, partly from recognising the crisis years. **A model can predict for the wrong reason.** |
+| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | A small gain over the simple guess, which mostly disappears when each episode is compared with its own year: it was recognising the crisis years. **A model can predict for the wrong reason.** |
 
 ## Words used here
 

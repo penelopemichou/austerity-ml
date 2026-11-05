@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-05", "step": "Year-adjusted check for Session 3: compared with its own year, the yes/no model's gain mostly disappears"},
   {"date": "2026-11-05", "step": "Session 3 notebook finished: logistic regression, regularization, yes/no unseen-country tests"},
   {"date": "2026-11-02", "step": "Corrected trade openness and inflation in the panel; re-ran the thesis code: main findings hold (TFP at h = 2: −1.50 % to −1.53 %)"},
   {"date": "2026-11-02", "step": "Session 2 notebook finished: several inputs, scaling, vectorized gradient descent"},
