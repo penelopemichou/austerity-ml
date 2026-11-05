@@ -46,7 +46,7 @@ Every baseline number is in `controls_correction_baseline.csv`.
 
 I re-ran these three checks on both panels. **No main conclusion changes:** only 6 of the 120 results change significance stars, all marginally. Coefficients are in % for log outcomes and native units otherwise. The code stores only coefficients for the threshold and sample tables, so I added p-values using the baseline method (country-clustered, t with 25 degrees of freedom), and applied the same method to Teulings–Zubanov.
 
-On the old panel, the threshold and sample results match printed Tables 7.4 and 7.5 of the thesis in all 90 cells, for both coefficients (to two decimals) and stars. So the model and the p-value method are the same as in the thesis for these two tables. I did not make this comparison for Teulings–Zubanov (Table 7.1), so its stars may differ from the printed ones.
+On the old panel, all 120 re-run results match the printed thesis tables, for both coefficients (to two decimals) and stars: the 30 Teulings–Zubanov cells in Table 7.1 and the 90 threshold and sample cells in Tables 7.4 and 7.5. So the model and the p-value method are the same as in the thesis for all three checks, and the star changes below are caused by the data correction alone.
 
 | Check | Results | Biggest coefficient change | Sign flips | Star changes |
 |---|---|---|---|---|
