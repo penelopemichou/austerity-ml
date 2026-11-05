@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-05", "step": "Practice notebook ML03b added: write logistic regression, a decision boundary and an overfitting demo myself, with PASS/FAIL tests"},
   {"date": "2026-11-05", "step": "Pre-trend check for Session 3: TFP growth before the episode adds only a faint signal; 5 episodes from 1997 lost"},
   {"date": "2026-11-05", "step": "Year-adjusted check for Session 3: compared with its own year, the yes/no model's gain mostly disappears"},
   {"date": "2026-11-05", "step": "Session 3 notebook finished: logistic regression, regularization, yes/no unseen-country tests"},

@@ -32,6 +32,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 1 | `ML01_dCAPB_to_TFP_linear_regression` | C1 Week 1: linear regression, cost function, gradient descent | See below |
 | 2 | `ML02_multiple_inputs_vectorized_gradient_descent` | C1 Week 2: multiple features, vectorization, feature scaling, learning rate | See below |
 | 3 | `ML03_logistic_regression_episode_classifier` | C1 Week 3: logistic regression, decision boundary, regularization | See below |
+| 3b | `ML03b_logistic_regression_practice` | C1 Week 3: practice exercises in the style of the course labs | Exercises with PASS/FAIL tests; solutions in `notes/ML03b_solutions.py` |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -64,7 +65,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 ## Structure
 
 ```
-notebooks/   one Colab notebook per session (ML01_, ML02_, ...)
+notebooks/   one Colab notebook per session (ML01_, ML02_, ...), plus practice notebooks (ML03b_)
 data/        analysis panel and source notes
 notes/       learning logs
 progress/    session plan, results and log (feed PROGRESS.md and my dashboard)
