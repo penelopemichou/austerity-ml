@@ -31,6 +31,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 |---|---|---|---|
 | 1 | `ML01_dCAPB_to_TFP_linear_regression` | C1 Week 1: linear regression, cost function, gradient descent | See below |
 | 2 | `ML02_multiple_inputs_vectorized_gradient_descent` | C1 Week 2: multiple features, vectorization, feature scaling, learning rate | See below |
+| 3 | `ML03_logistic_regression_episode_classifier` | C1 Week 3: logistic regression, decision boundary, regularization | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -48,6 +49,14 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - Adding ΔCAPB² does not catch the threshold in a useful way. It fits better within the sample, but much of that comes from Ireland 2010–11 (t falls from −7.1 to −1.6), a parabola wrongly says large loosening hurts too, and prediction does not improve.
 - **Data correction:** this session exposed two wrongly built controls, trade openness and inflation. They are now fixed. Re-running my thesis code on the corrected panel leaves the main findings in place (TFP at h = 2: −1.50 % becomes −1.53 %). See [the correction note](notes/controls_correction.md).
 - Verdict: ML still adds nothing reliable over the econometrics.
+
+### Session 3: a yes/no question (is a consolidation followed by below-median TFP growth?)
+
+- Logistic regression on the 96 consolidation episodes, with ΔCAPB and the four lagged controls. Gradient descent matches scikit-learn and statsmodels. λ = 10 was chosen inside the training countries only.
+- On the six hidden countries the model beats "always predict the most common class": log loss 0.670 vs 0.710, accuracy 60 % vs 40 %.
+- **This time it holds up in the fairer test, but only just:** with each country hidden in turn, log loss is 0.647 vs 0.694 (+6.8 %) and accuracy 64.6 % vs 49 %. Across 500 random splits it beats the baseline on log loss in 60 % of them.
+- ΔCAPB adds little: controls alone do as well. Only lagged inflation is significant (p = 0.049).
+- Part of the signal is timing: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007. So this is a weak predictor, not evidence about which consolidations *cause* weaker growth.
 
 ## Structure
 
