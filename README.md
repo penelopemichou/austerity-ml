@@ -34,6 +34,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 3 | `ML03_logistic_regression_episode_classifier` | C1 Week 3: logistic regression, decision boundary, regularization | See below |
 | 3b | `ML03b_logistic_regression_practice` | C1 Week 3: practice exercises in the style of the course labs | Exercises with PASS/FAIL tests; solutions in `notes/ML03b_solutions.py` |
 | 3b | `ML03b_logistic_regression_practice_completed` | C1 Week 3: my own answers to the practice exercises | All 25 checks pass |
+| 4 | `ML04_neural_network_episode_classifier` | C2 Weeks 1–2: neural networks, TensorFlow, ReLU, from_logits, Adam, softmax | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -63,6 +64,15 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Pre-trend check:** adding TFP growth before the episode (t−3 to t−1, year-adjusted the same way) costs 5 episodes from 1997, leaving 91. The pre-trend alone just about matches the baseline (+0.5 %, 15 of 24 countries) and is not significant (p = 0.48). Adding it to the other inputs does not help (−2.3 %, 12 of 24).
 - **Placebo test:** within each country, I shuffled which years count as consolidations 500 times and reran the model (each country hidden in turn, λ = 100). On log loss the real episodes are not unusual (21 % of shuffles do as well; 8 % with the year-adjusted target). On accuracy they are: only 2–3 % of shuffles match them (+14.5 and +12.5 points over the baseline). So the real consolidation years carry a faint pattern that random years do not, but it is far too weak to predict with, and it says nothing about cause.
 - Verdict: ML still adds nothing reliable over the econometrics.
+
+### Session 4: a small neural network on the same yes/no question
+
+- TensorFlow/Keras: one ReLU hidden layer (2, 4 or 8 units), a linear output with `from_logits=True`, binary cross-entropy, Adam and L2. The size and λ are chosen on the training countries only (4 groups of training countries; only the left-out group is scored). Logistic regression runs side by side with the same tuning and reproduces the Session 3 results.
+- Size: 15 / 29 / 57 parameters against 71 training episodes.
+- **No gain in the fair tests.** With each country hidden in turn the network's log loss is worse than the baseline: 0.763 vs 0.694 (−10.0 %) on the original target and 0.713 vs 0.700 (−1.9 %) year-adjusted, against −5.2 % and −3.7 % for logistic regression. It wins in 14 and 12 of 24 countries, and in 71 % and 49 % of 500 random splits.
+- **One lucky result:** on the six hidden countries with the year-adjusted target it scores 0.639 vs 0.718 and 72 % vs 40 % accuracy, but only with seed 0. Seeds 1–4 give 0.659 to 0.751, and the settings chosen change from round to round (8 different ones in 24 rounds).
+- Optional three-class softmax version (weak / middle / strong, year-adjusted): no better than the most common class (each hidden in turn −6.1 %, accuracy 33 % vs 35 %).
+- Verdict: a more flexible model does not find what a simple one could not. ML still adds nothing reliable over the econometrics.
 
 ## Structure
 

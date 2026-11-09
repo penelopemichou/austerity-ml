@@ -1,4 +1,6 @@
 [
+  {"date": "2026-11-09", "step": "Session 4 notebook finished: a small neural network does not beat logistic regression or the simple guess in the fair tests; results move a lot with the random seed"},
+  {"date": "2026-11-09", "step": "Course 2 Weeks 1–2 finished (neural networks, TensorFlow, Adam, softmax)"},
   {"date": "2026-11-09", "step": "Placebo test for Session 3: the real consolidation years carry a faint pattern (2–3 % of shuffles match on accuracy, not unusual on log loss)"},
   {"date": "2026-11-09", "step": "Fixed a leak in how Session 3 chose λ: the corrected yes/no model does not beat the simple guess when every country takes a turn"},
   {"date": "2026-11-05", "step": "Course 1 of the Machine Learning Specialization finished (certificate, 99.66 %). Next: Course 2 (neural networks and decision trees), with a decision-tree test of the large-consolidation threshold"},

@@ -1,10 +1,10 @@
 # Progress
 
-*Last updated: 9 Nov 2026, after correcting Session 3 and adding a placebo test.*
+*Last updated: 9 Nov 2026, after Session 4 (a small neural network).*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** Course 1 is finished and its 3 sessions are done; Session 4 (Course 2: neural networks and decision trees) is next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** Course 1 is finished, and so are Course 2 Weeks 1–2. Four sessions are done; Session 5 (evaluating models, then decision trees) is next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. A small neural network does no better: it only looked good on one lucky split with one lucky random seed. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -12,7 +12,7 @@ Each session applies one week of Andrew Ng's [Machine Learning Specialization](h
 
 ```mermaid
 flowchart LR
-    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>Decision trees: a threshold?<br/>Course 2"]:::next
+    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>A small neural network<br/>Course 2, Weeks 1–2"]:::done --> S5["<b>Session 5</b><br/>Decision trees: a threshold?<br/>Course 2, Weeks 3–4"]:::next
     classDef done fill:#d8ecd9,stroke:#3c7a45,color:#1b3a20
     classDef next fill:#fff4d6,stroke:#b8860b,color:#4a3600
     classDef later fill:#eeeeee,stroke:#999999,color:#555555
@@ -121,6 +121,20 @@ A yes/no version of the question. Out of the 96 consolidation episodes, which on
 
 **In plain words:** on how *confident* it is (log loss), the model is not unusual: plenty of fake versions do as well. On how often its yes/no calls are *right* (accuracy), only 2–3 % of fake versions match the real episodes. So the real consolidation years carry a faint pattern that random years do not. But it is far too weak to predict with: the model is barely more confident than a coin. And it is not cause: countries choose when to consolidate, and they were already diverging before.
 
+### Session 4: does a small neural network do better?
+
+The same yes/no question as Session 3, now with a tiny neural network: one hidden layer of 2, 4 or 8 units. Its size and how strongly it is held back (λ) were chosen on the training countries only, and logistic regression was run side by side in the same tests.
+
+| Test | Logistic regression | Neural network | Logistic regression, same year | Neural network, same year |
+|---|---|---|---|---|
+| Six hidden: log loss vs guess | 0.695 vs 0.710 | 0.705 vs 0.710 | 0.704 vs 0.718 | 0.639 vs 0.718 |
+| Six hidden: accuracy vs guess | 40 % vs 40 % | 40 % vs 40 % | 40 % vs 40 % | 72 % vs 40 % |
+| Each hidden in turn: log loss vs guess | 0.730 vs 0.694 | 0.763 vs 0.694 | 0.726 vs 0.700 | 0.713 vs 0.700 |
+| Countries where it beats the guess | 17 of 24 | 14 of 24 | 13 of 24 | 12 of 24 |
+| 500 random splits: beats the guess on log loss | 76 % of splits | 71 % of splits | 72 % of splits | 49 % of splits |
+
+**In plain words:** no. When every country takes a turn, the network is worse than the simple guess, and no better than logistic regression. It looks impressive once, on the six hidden countries with the "same year" target (72 % right). But that was one random starting point (seed): with four other seeds the same test gives a log loss anywhere from 0.66 to 0.75, and in random splits it wins only half the time. Even the smallest network here has about one adjustable number for every five training episodes, and the largest almost one per episode. More flexibility adds parameters, not information. A three-way version (weak / middle / strong growth) does not beat the guess either.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -132,6 +146,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 | 1 ([notebook](notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb), [log](notes/session01_log.md)) | Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the next two years, and tested it on countries the model had never seen. | The effect is real but barely better than guessing as a predictor. **Significant is not the same as predictive.** |
 | 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
 | 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | No gain over the simple guess once a leak in how λ was chosen is fixed. A placebo test finds a faint pattern in the real consolidation years, too weak to predict with. **Leakage can hide in the tuning step, and a model can predict for the wrong reason.** |
+| 4 ([notebook](notebooks/ML04_neural_network_episode_classifier.ipynb), [log](notes/session04_log.md)) | Trained a tiny neural network on the same yes/no question, chose its size and λ on the training countries only, compared it with logistic regression, and checked how much the random seed matters. | No gain: worse than the simple guess when every country takes a turn. One good seed on one split was luck. **On little data, a more flexible model adds parameters, not information.** |
 | 3b ([practice notebook](notebooks/ML03b_logistic_regression_practice.ipynb)) | Exercises to write the sigmoid, cost, gradient and gradient descent myself, draw a decision boundary, and watch a wiggly curve overfit, each checked against scikit-learn. | Done: see my completed version below. |
 | 3b, completed ([notebook](notebooks/ML03b_logistic_regression_practice_completed.ipynb)) | My own answers to the three practice exercises. | All 25 checks pass against scikit-learn. |
 
@@ -152,6 +167,10 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **Regularization (λ):** a penalty that keeps the model's weights small, so it does not fit noise in a small sample.
 - **Placebo test:** rerunning the analysis on fake data where the thing you care about (here, which years were consolidations) is shuffled at random. If the real result looks like the fake ones, it is probably not about that thing.
 - **Leak (leakage):** information from the test countries slipping into training or tuning, which makes a model look better than it is.
+- **Neural network:** a model built from layers of small units. Each unit takes a weighted sum of its inputs; a *ReLU* unit then keeps it if positive and gives 0 otherwise. Stacking units lets the model draw curved boundaries.
+- **Parameters:** the numbers a model adjusts while learning (weights and biases). Many parameters and few rows make it easy to fit noise.
+- **Adam:** a version of gradient descent that adjusts the step size for each parameter by itself.
+- **Random seed:** the starting point for the random numbers, such as a network's first weights. Fixing it makes a run repeatable; changing it shows how much luck is involved.
 - **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
 - **Learning curve:** a chart of the model's error during training. It should fall, then go flat.
 
