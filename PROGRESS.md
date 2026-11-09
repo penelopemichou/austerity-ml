@@ -83,7 +83,7 @@ A yes/no version of the question. Out of the 96 consolidation episodes, which on
 | ΔCAPB only | 0.696 vs 0.710 | 40 % vs 40 % | 0.685 vs 0.694 | 57 % vs 49 % |
 | Controls only | 0.698 vs 0.710 | 40 % vs 40 % | 0.734 vs 0.694 | 64 % vs 49 % |
 
-**In plain words:** on the six hidden countries the model makes exactly the same yes/no calls as the simple guess. With every country taking a turn, its log loss is *worse* than the guess. Its accuracy looks better, but this guess is wrong more than half the time, so that is an easy bar. Part of any signal is also timing: episodes in the 2008–2013 crisis years were followed by weak growth much more often (64 %) than earlier ones (41 %).
+**In plain words:** on the six hidden countries the model makes exactly the same yes/no calls as the simple guess. With every country taking a turn, its log loss is *worse* than the guess. That comes down to one country: in Luxembourg's turn the model chose a weaker penalty and was badly wrong. Without that one turn it is slightly better than the guess, but by too little to be useful. Its accuracy looks better, but this guess is wrong more than half the time, so that is an easy bar. Part of any signal is also timing: episodes in the 2008–2013 crisis years were followed by weak growth much more often (64 %) than earlier ones (41 %).
 
 **Taking the timing out.** I then compared each episode with the other countries in the *same year* instead of with all years. A crisis year then no longer counts as "weak" just because everyone was doing badly.
 
