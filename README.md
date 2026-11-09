@@ -54,13 +54,14 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 
 ### Session 3: a yes/no question (is a consolidation followed by below-median TFP growth?)
 
-- Logistic regression on the 96 consolidation episodes, with ΔCAPB and the four lagged controls. Gradient descent matches scikit-learn and statsmodels. λ = 10 was chosen inside the training countries only.
-- On the six hidden countries the model beats "always predict the most common class": log loss 0.670 vs 0.710, accuracy 60 % vs 40 %.
-- **This time it holds up in the fairer test, but only just:** with each country hidden in turn, log loss is 0.647 vs 0.694 (+6.8 %) and accuracy 64.6 % vs 49 %. Across 500 random splits it beats the baseline on log loss in 60 % of them.
-- ΔCAPB adds little: controls alone do as well. Only lagged inflation is significant (p = 0.049).
-- Part of the signal is timing: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007. So this is a weak predictor, not evidence about which consolidations *cause* weaker growth.
-- **Year-adjusted check:** comparing each episode with the median of training countries *in the same year* removes the timing pattern. The pooled log loss still looks better (0.638 vs 0.700), but the model now wins in only 13 of 24 countries and in 52 % of 500 random splits (median gain +0.2 %). No input is significant at 5 %. Most of the Session 3 signal was timing.
-- **Pre-trend check:** adding TFP growth before the episode (t−3 to t−1, year-adjusted the same way) costs 5 episodes from 1997, leaving 91. On those, the pre-trend alone is the steadiest model (15 of 24 countries, 67 % of random splits), but its gain is small (median +2.4 %) and not significant (p = 0.48). Faster growth before goes with less weak growth after. Adding it to the other inputs does not help (12 of 24, 41 % of splits).
+- **Correction, 9 Nov 2026:** the first version had a leak. The loop that chose λ also scored the hidden countries, so they helped pick λ. The numbers below come from the fixed code, and they reverse the earlier "small gain" result.
+- Logistic regression on the 96 consolidation episodes, with ΔCAPB and the four lagged controls. Gradient descent matches scikit-learn and statsmodels. λ = 100, the strongest penalty tried, is chosen inside the training countries.
+- On the six hidden countries the log loss is slightly lower than "always predict the most common class" (0.695 vs 0.710), but the yes/no calls are the same (accuracy 40 % vs 40 %).
+- **It does not hold up in the fairer test:** with each country hidden in turn, log loss is *worse* than the baseline (0.730 vs 0.694, −5.2 %). Accuracy is 63.5 % vs 49 %, but that baseline is wrong more than half the time. Across 500 random splits the log loss is better in 76 % of them, by a median of only +1.6 %.
+- Only lagged inflation is significant in a logit on all episodes (p = 0.049). Timing also matters: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007.
+- **Year-adjusted check:** comparing each episode with the median of training countries *in the same year* removes the timing pattern. The model is still worse than the baseline with each country hidden in turn (0.717 vs 0.700) and wins in 13 of 24 countries. No input is significant at 5 %.
+- **Pre-trend check:** adding TFP growth before the episode (t−3 to t−1, year-adjusted the same way) costs 5 episodes from 1997, leaving 91. The pre-trend alone just about matches the baseline (+0.5 %, 15 of 24 countries) and is not significant (p = 0.48). Adding it to the other inputs does not help (−2.3 %, 12 of 24).
+- **Placebo test:** within each country, I shuffled which years count as consolidations 500 times and reran the model (each country hidden in turn, λ = 100). On log loss the real episodes are not unusual (21 % of shuffles do as well; 8 % with the year-adjusted target). On accuracy they are: only 2–3 % of shuffles match them (+14.5 and +12.5 points over the baseline). So the real consolidation years carry a faint pattern that random years do not, but it is far too weak to predict with, and it says nothing about cause.
 - Verdict: ML still adds nothing reliable over the econometrics.
 
 ## Structure

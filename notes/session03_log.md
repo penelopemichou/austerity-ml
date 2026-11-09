@@ -1,6 +1,8 @@
-# Learning log, Session 3 (5 Nov 2026)
+# Learning log, Session 3 (5 Nov 2026, corrected 9 Nov 2026)
 
 **Course:** Machine Learning Specialization, Course 1 Week 3 (classification, sigmoid, decision boundary, logistic cost, gradient descent for logistic regression, overfitting, regularization)
+
+> **Correction, 9 Nov 2026.** The code that chose λ had a leak. Inside the loop that leaves one training country out at a time, it also scored the hidden countries' episodes, so the hidden countries helped choose λ. That made every result that chooses λ look better than it was. The code is fixed, every number below comes from the fixed code, and the main conclusion changes: the model does **not** beat the simple guess in the fairer test. Results that do not choose λ (the logits, the timing and pre-trend tables, the check against scikit-learn) are unchanged.
 
 **Setup, decided before fitting:**
 - Rows: the 96 consolidation episodes (ΔCAPB ≥ 1.5 pp) in Session 2's rows, from 24 countries. Some countries have only one or two episodes.
@@ -13,75 +15,87 @@
 - Vectorized gradient descent for logistic regression.
 - With λ = 0 it matches scikit-learn and statsmodels to 4 decimals (largest gap 3.5e-05). With λ = 1 it matches scikit-learn with C = 1/λ (gap 3.3e-04).
 - α was chosen as in Session 2: values about ×3 apart, on training data only. α = 3 for λ up to 10, but λ = 100 needs α = 1. My first run reused one α for every λ, and gradient descent blew up at λ = 100, so α is now picked for each λ.
-- λ ∈ {0, 0.1, 1, 10, 100}, chosen by leaving one training country out at a time, without the hidden countries. On the Session 1 training split, λ = 10 wins (log loss 0.680, against 0.741 with no regularization). Regularization helps, which fits a small sample with weak signal.
+- λ ∈ {0, 0.1, 1, 10, 100}, chosen by leaving one training country out at a time and scoring only that country. On the Session 1 training split, λ = 100 wins (log loss 0.702, against 0.960 with no regularization). The strongest penalty wins: the weights shrink until the model is close to the simple guess.
 
-**Prediction: a small, unsteady gain**
+**Prediction: no gain in the fairer test**
 
 | Model | Six hidden: log loss vs baseline | Six hidden: accuracy vs baseline | Each hidden in turn: log loss vs baseline | Each hidden in turn: accuracy vs baseline | Countries where log loss beats baseline |
 |---|---|---|---|---|---|
-| **ΔCAPB + controls** | **0.670 vs 0.710 (+5.6 %)** | **60 % vs 40 %** | **0.647 vs 0.694 (+6.8 %)** | **64.6 % vs 49.0 %** | **17 of 24** |
-| ΔCAPB only | 0.693 vs 0.710 (+2.3 %) | 44 % vs 40 % | 0.664 vs 0.694 (+4.3 %) | 59.4 % vs 49.0 % | 13 of 24 |
-| Controls only | 0.670 vs 0.710 (+5.6 %) | 68 % vs 40 % | 0.640 vs 0.694 (+7.8 %) | 61.5 % vs 49.0 % | 14 of 24 |
+| **ΔCAPB + controls** | **0.695 vs 0.710 (+2.1 %)** | **40 % vs 40 %** | **0.730 vs 0.694 (−5.2 %)** | **63.5 % vs 49.0 %** | **17 of 24** |
+| ΔCAPB only | 0.696 vs 0.710 (+1.9 %) | 40 % vs 40 % | 0.685 vs 0.694 (+1.3 %) | 57.3 % vs 49.0 % | 13 of 24 |
+| Controls only | 0.698 vs 0.710 (+1.6 %) | 40 % vs 40 % | 0.734 vs 0.694 (−5.8 %) | 63.5 % vs 49.0 % | 14 of 24 |
 
-- Unlike Sessions 1 and 2, the model does better than the baseline in the fairer test too, not only on one split. But the gain is small.
-- Over 500 random sets of six hidden countries, log loss beats the baseline in 60 % of splits (median +2.3 %), and accuracy in 74 % (median +10 points).
+- On the six hidden countries the model is a little better on log loss, but it makes the same yes/no calls as the baseline (40 % accuracy each).
+- With every country hidden in turn, the pooled log loss is *worse* than the baseline (−5.2 %). In some rounds the inner loop picks a small λ, and those confident models are badly wrong.
+- Over 500 random sets of six hidden countries (λ fixed at 100), log loss beats the baseline in 76 % of splits but only by a median of +1.6 %; accuracy wins in 60 % (median +4.8 points).
 - The baseline is weak here, because the classes are almost 50/50 and the majority class flips between rounds. Always guessing "weak" on all 96 episodes would be right 51 % of the time.
-- Results vary a lot by country: Luxembourg and Latvia go wrong, Italy and Romania go well.
-- Without the inflation cap, the results barely change (each hidden in turn: +7.6 %, accuracy 65.6 %), so the cap was not decisive.
+- Without the inflation cap, the results barely change (each hidden in turn: −4.8 %, accuracy 62.5 %), so the cap was not decisive.
 
 **What the model says**
 - Logit on all 96 episodes, country-clustered standard errors: only lagged inflation is significant at 5 % (0.081, p = 0.049). ΔCAPB is positive but not significant (0.108, p = 0.199).
-- Controls alone predict as well as controls plus ΔCAPB. So the size of the consolidation adds little; the economic conditions around it matter more.
-- Timing matters: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007 and 48 % in 2014–2022. Because "weak" compares each episode with all years, part of what the model picks up is the period, not the consolidation.
+- Timing matters: 64 % of episodes in 2008–2013 were followed by weak growth, against 41 % in 1997–2007 and 48 % in 2014–2022. Because "weak" compares each episode with all years, part of any signal is the period, not the consolidation.
 
 **Year-adjusted check (added 5 Nov 2026)**
-- Target redefined: 1 if the episode's TFP growth is below the median of all training-country observations in the **same year**. The yearly medians are recalculated without the hidden countries each time (they range from −4.24 % in 2007 to 6.64 % in 1998). Everything else is identical: the same 96 episodes, inputs, ±30 % inflation cap, α rule (same α for every λ as before), λ chosen inside the training countries (λ = 10 again), majority-class baseline, and all three tests.
+- Target redefined: 1 if the episode's TFP growth is below the median of all training-country observations in the **same year**. The yearly medians are recalculated without the hidden countries each time (they range from −4.24 % in 2007 to 6.64 % in 1998). Everything else is identical, and λ = 100 is chosen again.
 
 | Test | Original: median of all years | Year-adjusted: median of the same year |
 |---|---|---|
 | Share of the 96 episodes that are weak | 51 % | 52 % |
-| Six hidden: log loss vs baseline | 0.670 vs 0.710 (+5.6 %) | 0.674 vs 0.718 (+6.1 %) |
-| Six hidden: accuracy vs baseline | 60 % vs 40 % | 56 % vs 40 % |
-| Each hidden in turn: log loss vs baseline | 0.647 vs 0.694 (+6.8 %) | 0.638 vs 0.700 (+8.8 %) |
-| Each hidden in turn: accuracy vs baseline | 64.6 % vs 49.0 % | 60.4 % vs 42.7 % |
+| Six hidden: log loss vs baseline | 0.695 vs 0.710 (+2.1 %) | 0.704 vs 0.718 (+2.0 %) |
+| Six hidden: accuracy vs baseline | 40 % vs 40 % | 40 % vs 40 % |
+| Each hidden in turn: log loss vs baseline | 0.730 vs 0.694 (−5.2 %) | 0.717 vs 0.700 (−2.5 %) |
+| Each hidden in turn: accuracy vs baseline | 63.5 % vs 49.0 % | 55.2 % vs 42.7 % |
 | Each hidden in turn: countries where log loss beats baseline | 17 of 24 | 13 of 24 |
-| 500 random splits: log loss better than baseline | 60 % of splits (median +2.3 %) | 52 % of splits (median +0.2 %) |
-| 500 random splits: accuracy better than baseline | 74 % of splits (median +10 points) | 72 % of splits (median +10 points) |
+| 500 random splits: log loss better than baseline | 76 % of splits (median +1.6 %) | 72 % of splits (median +0.9 %) |
+| 500 random splits: accuracy better than baseline | 60 % of splits (median +4.8 points) | 54 % of splits (median +3.8 points) |
 
 - The timing pattern is gone: the share of weak episodes is now 56 % in 1997–2007, 52 % in 2008–2013 and 48 % in 2014–2022.
-- The pooled log loss still looks better than the baseline, but the steadiness tests do not hold up: the model wins in only 13 of 24 countries and in 52 % of random splits, with a median gain of +0.2 %. That is a coin flip.
-- The accuracy gains look steadier, but the baseline sets a low bar. With classes near 50/50, the majority class flips between rounds and its accuracy falls below 50 % (42.7 % with each country hidden in turn). Against a fair coin (50 %), the model's 60 % on 96 episodes is only about two standard errors better.
+- The year-adjusted model is also worse than the baseline with every country hidden in turn, and wins in only 13 of 24 countries.
 - Logit on all 96 episodes: no input is significant at 5 % any more. Inflation is the closest (p = 0.092); ΔCAPB has p = 0.366.
-- **Conclusion:** most of the Session 3 signal was timing. Once each episode is compared with its own year, what is left is weak and unsteady, and ML still adds nothing reliable over the econometrics.
 
 **Pre-trend check (added 5 Nov 2026), building on the year-adjusted version**
-- One extra input: TFP growth before the episode, 100 × (ln TFP[t−1] − ln TFP[t−3]). It ends where the target window starts, so the two do not overlap. It is year-adjusted like the target: relative to the median of training-country observations in the same year, recalculated without the hidden countries each time.
-- **5 of the 96 episodes are lost** because TFP at t−3 is missing: Austria, Bulgaria, Italy, Romania and Slovakia, all in 1997 (the panel starts in 1995). 91 episodes in 24 countries remain. All three models use these 91, so they can be compared directly. Everything else is as in the year-adjusted check (α the same for every λ).
+- One extra input: TFP growth before the episode, 100 × (ln TFP[t−1] − ln TFP[t−3]). It ends where the target window starts, so the two do not overlap. It is year-adjusted like the target.
+- **5 of the 96 episodes are lost** because TFP at t−3 is missing: Austria, Bulgaria, Italy, Romania and Slovakia, all in 1997 (the panel starts in 1995). 91 episodes in 24 countries remain, and all three models use these 91.
 
-| Test | Section 11 reference: year-adjusted original, 96 episodes | Year-adjusted original, 91 episodes | Pre-trend only, 91 episodes | Year-adjusted original + pre-trend, 91 episodes |
-|---|---|---|---|---|
-| λ chosen | 10 | 10 | 0.1 | 10 |
-| Six hidden: log loss vs baseline | 0.674 vs 0.718 | 0.663 vs 0.702 (+5.5 %) | 0.668 vs 0.702 (+4.8 %) | 0.658 vs 0.702 (+6.2 %) |
-| Six hidden: accuracy vs baseline | 56 % vs 40 % | 58 % vs 42 % | 54 % vs 42 % | 58 % vs 42 % |
-| Each hidden in turn: log loss vs baseline | 0.638 vs 0.700 (+8.8 %) | 0.671 vs 0.700 (+4.3 %) | 0.668 vs 0.700 (+4.7 %) | 0.670 vs 0.700 (+4.3 %) |
-| Each hidden in turn: accuracy vs baseline | 60.4 % vs 42.7 % | 60.4 % vs 48.4 % | 52.7 % vs 48.4 % | 56.0 % vs 48.4 % |
-| Countries where log loss beats baseline | 13 of 24 | 12 of 24 | 15 of 24 | 12 of 24 |
-| 500 random splits: log loss better | 52 % (median +0.2 %) | 38 % (median −2.1 %) | 67 % (median +2.4 %) | 41 % (median −1.4 %) |
-| 500 random splits: accuracy better | 72 % (median +10.0 points) | 62 % (median +5.6 points) | 69 % (median +8.7 points) | 63 % (median +5.4 points) |
+| Test | Year-adjusted original, 91 episodes | Pre-trend only, 91 episodes | Year-adjusted original + pre-trend, 91 episodes |
+|---|---|---|---|
+| λ chosen | 100 | 10 | 10 |
+| Six hidden: log loss vs baseline | 0.689 vs 0.702 (+1.8 %) | 0.678 vs 0.702 (+3.4 %) | 0.658 vs 0.702 (+6.2 %) |
+| Six hidden: accuracy vs baseline | 42 % vs 42 % | 54 % vs 42 % | 58 % vs 42 % |
+| Each hidden in turn: log loss vs baseline | 0.722 vs 0.700 (−3.1 %) | 0.697 vs 0.700 (+0.5 %) | 0.717 vs 0.700 (−2.3 %) |
+| Each hidden in turn: accuracy vs baseline | 53.8 % vs 48.4 % | 51.6 % vs 48.4 % | 50.5 % vs 48.4 % |
+| Countries where log loss beats baseline | 11 of 24 | 15 of 24 | 12 of 24 |
+| 500 random splits: log loss better | 55 % (median +0.2 %) | 77 % (median +2.1 %) | 41 % (median −1.4 %) |
+| 500 random splits: accuracy better | 45 % (median +0.0 points) | 65 % (median +5.3 points) | 63 % (median +5.4 points) |
 
-- **Dropping five 1997 episodes alone moves the results a lot.** The year-adjusted original goes from +8.8 % to +4.3 % with each country hidden in turn, and from 52 % to 38 % of random splits. The earlier pooled gain was fragile.
-- **The pre-trend alone is the steadiest of the three, but small.** It beats the baseline in 15 of 24 countries and in 67 % of random splits, with a median gain of +2.4 %. Its accuracy (52.7 % with each country hidden in turn) is barely above a coin flip.
-- **Adding it to the other inputs does not help.** The combined model wins in 12 of 24 countries and 41 % of random splits, about the same as without it. With only 91 episodes, the extra inputs cost more than they add.
-- **Direction: persistence, not a bounce back.** Faster TFP growth before the episode goes with a lower chance of weak growth after (logit coefficient −0.052, p = 0.483, not significant). By thirds: 53 % weak after the slowest third, 60 % after the middle third, and 39 % after the fastest third, so the pattern is not even smooth. The shared t−1 endpoint would, if anything, push the other way (a blip at t−1 raises one window and lowers the other), so the mechanical overlap does not explain this sign.
-- No input is significant at 5 % in the combined logit (inflation p = 0.533, ΔCAPB p = 0.243).
-- **Conclusion:** past TFP growth carries a faint signal of its own, in line with the thesis caveat that countries diverge before they consolidate. But it is not significant, and it does not turn the model into a reliable predictor. ML still adds nothing reliable over the econometrics.
+- The pre-trend alone is the only model here that is not worse than the baseline with every country hidden in turn, but its gain is tiny (+0.5 %) and its accuracy is about a coin flip.
+- Adding it to the other inputs does not help: the combined model looks good on the six hidden countries, but it loses with every country hidden in turn and in most random splits.
+- Direction: faster TFP growth before the episode goes with a lower chance of weak growth after (logit coefficient −0.052, p = 0.483, not significant). By thirds: 53 % weak after the slowest third, 60 % after the middle third, and 39 % after the fastest third.
+
+**Placebo test (added 9 Nov 2026)**
+- Within each country, the ΔCAPB values were shuffled across years, 500 times. Each country keeps its number of episodes and their sizes; only *which years* count as consolidations becomes random (in a typical shuffle, 23 of the 96 real episodes happen to stay in their own year). The model was rerun on each shuffled panel with every country hidden in turn, λ fixed at 100 as chosen on the training countries. The real result was recomputed the same way.
+
+| | Original target | Year-adjusted target |
+|---|---|---|
+| Real episodes: log loss vs baseline | +0.9 % | +1.4 % |
+| Shuffled: median (middle 90 %) | −0.4 % (−2.5 to +2.2) | −0.8 % (−2.8 to +1.8) |
+| Shuffles at least as good on log loss | 21 % | 8 % |
+| Real episodes: accuracy minus baseline | +14.5 points | +12.5 points |
+| Shuffled: median (middle 90 %) | +0.0 (−3.2 to +9.4) | +0.0 (−3.2 to +9.3) |
+| Shuffles at least as good on accuracy | 2 % | 3 % |
+| Countries won: real vs shuffled median | 17 vs 14 of 24 | 13 vs 14 of 24 |
+
+- On log loss, the real episodes are not unusual: 21 % and 8 % of the fake versions do at least as well.
+- On accuracy, they are: only 2–3 % of the fake versions get the yes/no calls right as often. With λ = 100 the model's chances stay close to 50 %, so its calls depend on small tilts. For the real episodes those tilts point the right way more often than for random years.
+- So the real consolidation years carry a faint pattern that random years do not. It is far too weak to predict with (the model is barely more confident than a coin), it shows up in one measure but not the other, and four comparisons were made, so one or two small shares can happen by chance.
+- It is also not causal. Countries choose when to consolidate, and the thesis pre-trend shows they were already diverging, so the pattern can come from what goes with consolidating, not from the consolidation itself.
 
 **Main lessons**
+- Leakage can hide in the tuning step. Choosing λ looked "inside the training countries", but one line let the hidden countries in, and it turned a loss into an apparent win. A result that beats every fixed setting is a warning sign.
 - Accuracy and log loss can tell different stories: log loss punishes confident mistakes.
-- Regularization (λ = 10) helped in a small, noisy sample.
+- Strong regularization (λ = 100) won once the leak was fixed: with this little signal, the best model is one that stays close to the simple guess.
 - Choosing α depends on λ. An α that works without regularization can blow up with a large λ.
-- A predictor can work for the wrong reason. Here it partly recognised the crisis years; the year-adjusted check removed most of the gain. The thesis pre-trend caveat still applies, so this is not evidence about which consolidations *cause* weaker growth.
-- A baseline that is wrong more than half the time is easy to beat. Check the accuracy against 50 % as well.
-- Small samples are fragile: removing five episodes halved the pooled gain. Read the steadiness tests (countries won, random splits), not one pooled number.
+- A baseline that is wrong more than half the time is easy to beat. Check the accuracy against 50 % as well. A placebo test handles this automatically, because the fake versions face the same baseline.
+- Small samples are fragile. Read the steadiness tests (countries won, random splits), not one pooled number.
 
-**Next:** Course 1 is done. Course 2 (neural networks, decision trees) can be tested the same way, with the year-adjusted target and these honest baselines.
+**Next:** Course 1 is done. Course 2 (neural networks, decision trees) can be tested the same way, with the year-adjusted target, these honest baselines and a placebo check.

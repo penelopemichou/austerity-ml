@@ -34,12 +34,13 @@ Taken from PROGRESS.md and the session logs in `notes/`.
   - **Six hidden countries:** Belgium, Greece, Lithuania, Malta, Slovakia and Spain (seed 42, the same in every session).
   - **Each country hidden in turn:** report the pooled result *and* how many countries the model wins.
   - **500 random sets of six hidden countries:** shows how lucky one split was.
-- Read the steadiness tests (countries won, share of random splits), not one pooled number. Small samples are fragile: dropping five episodes once halved a pooled gain.
+- Read the steadiness tests (countries won, share of random splits), not one pooled number. Small samples are fragile.
+- Where it helps, add a placebo test: shuffle which years count as episodes within each country, rerun, and see where the real result falls among the shuffled ones.
 
 **Using only the training countries**
 - Fit scaling (z-scores) on the training countries only, then apply it to the hidden ones.
 - Compute medians that define a target (for example "below-median growth") on the training countries only, again in every round.
-- Choose α and λ with the training countries only. Pick α from values about ×3 apart: the largest whose cost falls at every step, with a separate α for each λ. Choose λ by leaving one *training* country out at a time. That inner loop must score only the left-out training country, never the hidden ones.
+- Choose α and λ with the training countries only. Pick α from values about ×3 apart: the largest whose cost falls at every step, with a separate α for each λ. Choose λ by leaving one *training* country out at a time. That inner loop must score only the left-out training country, never the hidden ones (getting this wrong inflated the first Session 3 results). A tuned result that beats every fixed setting is a warning sign of leakage.
 
 **Comparing with a simple baseline**
 - Numbers: always predict the training mean.

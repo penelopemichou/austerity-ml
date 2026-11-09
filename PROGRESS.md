@@ -1,10 +1,10 @@
 # Progress
 
-*Last updated: 5 Nov 2026, after Session 3 and its year-adjusted and pre-trend checks.*
+*Last updated: 9 Nov 2026, after correcting Session 3 and adding a placebo test.*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** all 3 planned sessions are done. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does slightly better than the simple guess, but mostly because it recognises the crisis years: compared with its own year, its edge becomes a coin flip. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** all 3 planned sessions are done. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -75,38 +75,51 @@ Only partly, and it does not help prediction. Within the data it fits better, bu
 
 A yes/no version of the question. Out of the 96 consolidation episodes, which ones were followed by TFP growth below the median? The simple guess here is "always predict the most common answer". **Log loss** scores how confident the model was in the right answer: lower is better, and confident mistakes cost a lot.
 
+**A correction (9 Nov 2026).** My first version had a leak: when the code chose how strongly to regularize (λ), it also peeked at the hidden countries. That made the model look better than the simple guess. With the leak fixed, it is not. The numbers below are the corrected ones.
+
 | Model | Six hidden: log loss vs guess | Six hidden: accuracy vs guess | Each hidden in turn: log loss vs guess | Each hidden in turn: accuracy vs guess |
 |---|---|---|---|---|
-| **ΔCAPB + controls** | **0.670 vs 0.710** | **60 % vs 40 %** | **0.647 vs 0.694** | **65 % vs 49 %** |
-| ΔCAPB only | 0.693 vs 0.710 | 44 % vs 40 % | 0.664 vs 0.694 | 59 % vs 49 % |
-| Controls only | 0.670 vs 0.710 | 68 % vs 40 % | 0.640 vs 0.694 | 62 % vs 49 % |
+| **ΔCAPB + controls** | **0.695 vs 0.710** | **40 % vs 40 %** | **0.730 vs 0.694** | **64 % vs 49 %** |
+| ΔCAPB only | 0.696 vs 0.710 | 40 % vs 40 % | 0.685 vs 0.694 | 57 % vs 49 % |
+| Controls only | 0.698 vs 0.710 | 40 % vs 40 % | 0.734 vs 0.694 | 64 % vs 49 % |
 
-**In plain words:** this is the first model that does better than the simple guess even when every country takes a turn, but the gain is small and uneven. It works well for Italy and Romania and badly for Luxembourg and Latvia. The size of the consolidation adds little; the economic conditions around it do more of the work. Part of the signal is timing: episodes during the 2008–2013 crisis years were followed by weak growth much more often (64 %) than earlier ones (41 %). So the model partly recognises bad periods, and it tells us nothing about cause.
+**In plain words:** on the six hidden countries the model makes exactly the same yes/no calls as the simple guess. With every country taking a turn, its log loss is *worse* than the guess. Its accuracy looks better, but this guess is wrong more than half the time, so that is an easy bar. Part of any signal is also timing: episodes in the 2008–2013 crisis years were followed by weak growth much more often (64 %) than earlier ones (41 %).
 
-**Taking the timing out.** To check, I compared each episode with the other countries in the *same year* instead of with all years. A crisis year then no longer counts as "weak" just because everyone was doing badly.
+**Taking the timing out.** I then compared each episode with the other countries in the *same year* instead of with all years. A crisis year then no longer counts as "weak" just because everyone was doing badly.
 
 | Test | Compared with all years | Compared with the same year |
 |---|---|---|
-| Six hidden: log loss vs guess | 0.670 vs 0.710 | 0.674 vs 0.718 |
-| Six hidden: accuracy vs guess | 60 % vs 40 % | 56 % vs 40 % |
-| Each hidden in turn: log loss vs guess | 0.647 vs 0.694 | 0.638 vs 0.700 |
-| Each hidden in turn: accuracy vs guess | 65 % vs 49 % | 60 % vs 43 % |
+| Six hidden: log loss vs guess | 0.695 vs 0.710 | 0.704 vs 0.718 |
+| Six hidden: accuracy vs guess | 40 % vs 40 % | 40 % vs 40 % |
+| Each hidden in turn: log loss vs guess | 0.730 vs 0.694 | 0.717 vs 0.700 |
+| Each hidden in turn: accuracy vs guess | 64 % vs 49 % | 55 % vs 43 % |
 | Countries where it beats the guess | 17 of 24 | 13 of 24 |
-| 500 random splits: beats the guess on log loss | 60 % of splits | 52 % of splits |
+| 500 random splits: beats the guess on log loss | 76 % of splits | 72 % of splits |
 
-**In plain words:** with the timing taken out, the model beats the guess in only about half the countries and half the random splits, a coin flip. The accuracy numbers still look better than the guess, but that guess is wrong more than half the time here, so it is an easy bar. Most of what the model had found was the crisis years.
+**In plain words:** with or without the timing, the model is no better than the guess when every country takes a turn. In random splits it often wins, but by very little (a median of about 1–2 %).
 
 **Does growth before predict growth after?** My thesis found that consolidating countries were already falling behind before they tightened (a *pre-trend*). So I added one input: TFP growth in the two years before the episode, compared with other countries in the same year. The panel starts in 1995, so the five 1997 episodes have no "before" and are left out (91 remain). All three models below use the same 91.
 
 | Test | Without the pre-trend | Pre-trend only | Both together |
 |---|---|---|---|
-| Six hidden: log loss vs guess | 0.663 vs 0.702 | 0.668 vs 0.702 | 0.658 vs 0.702 |
-| Each hidden in turn: log loss vs guess | 0.671 vs 0.700 | 0.668 vs 0.700 | 0.670 vs 0.700 |
-| Each hidden in turn: accuracy vs guess | 60 % vs 48 % | 53 % vs 48 % | 56 % vs 48 % |
-| Countries where it beats the guess | 12 of 24 | 15 of 24 | 12 of 24 |
-| 500 random splits: beats the guess on log loss | 38 % of splits | 67 % of splits | 41 % of splits |
+| Six hidden: log loss vs guess | 0.689 vs 0.702 | 0.678 vs 0.702 | 0.658 vs 0.702 |
+| Each hidden in turn: log loss vs guess | 0.722 vs 0.700 | 0.697 vs 0.700 | 0.717 vs 0.700 |
+| Each hidden in turn: accuracy vs guess | 54 % vs 48 % | 52 % vs 48 % | 51 % vs 48 % |
+| Countries where it beats the guess | 11 of 24 | 15 of 24 | 12 of 24 |
+| 500 random splits: beats the guess on log loss | 55 % of splits | 77 % of splits | 41 % of splits |
 
-**In plain words:** growth before an episode carries a faint signal: countries that were growing faster before were less often weak after. On its own it is the steadiest of the three, but the gain is small and could be chance. Adding it to the other inputs does not help. Leaving out just five episodes also shrank the earlier result a lot, which shows how fragile small samples are.
+**In plain words:** growth before an episode carries a faint signal: countries that were growing faster before were less often weak after. On its own it is the only model that does not lose to the guess when every country takes a turn, but only just. Adding it to the other inputs does not help.
+
+**Placebo test: do the real consolidation years matter?** If the model has learned something about consolidations, it should do better on the real episodes than on fake ones. So I shuffled, within each country, which years count as consolidations (keeping how many each country had and how big they were), 500 times, and reran the model on each fake version.
+
+| | Compared with all years | Compared with the same year |
+|---|---|---|
+| Real episodes: log loss vs guess | +0.9 % | +1.4 % |
+| Fake versions doing at least as well (log loss) | 21 % | 8 % |
+| Real episodes: accuracy vs guess | +14.5 points | +12.5 points |
+| Fake versions doing at least as well (accuracy) | 2 % | 3 % |
+
+**In plain words:** on how *confident* it is (log loss), the model is not unusual: plenty of fake versions do as well. On how often its yes/no calls are *right* (accuracy), only 2–3 % of fake versions match the real episodes. So the real consolidation years carry a faint pattern that random years do not. But it is far too weak to predict with: the model is barely more confident than a coin. And it is not cause: countries choose when to consolidate, and they were already diverging before.
 
 ### A data error, found and fixed
 
@@ -118,7 +131,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 |---|---|---|
 | 1 ([notebook](notebooks/ML01_dCAPB_to_TFP_linear_regression.ipynb), [log](notes/session01_log.md)) | Drew the best straight line from the size of a budget tightening (ΔCAPB) to TFP growth over the next two years, and tested it on countries the model had never seen. | The effect is real but barely better than guessing as a predictor. **Significant is not the same as predictive.** |
 | 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
-| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | A small gain over the simple guess, which mostly disappears when each episode is compared with its own year: it was recognising the crisis years. Growth before the episode adds only a faint signal. **A model can predict for the wrong reason.** |
+| 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | No gain over the simple guess once a leak in how λ was chosen is fixed. A placebo test finds a faint pattern in the real consolidation years, too weak to predict with. **Leakage can hide in the tuning step, and a model can predict for the wrong reason.** |
 | 3b ([practice notebook](notebooks/ML03b_logistic_regression_practice.ipynb)) | Exercises to write the sigmoid, cost, gradient and gradient descent myself, draw a decision boundary, and watch a wiggly curve overfit, each checked against scikit-learn. | Done: see my completed version below. |
 | 3b, completed ([notebook](notebooks/ML03b_logistic_regression_practice_completed.ipynb)) | My own answers to the three practice exercises. | All 25 checks pass against scikit-learn. |
 
@@ -137,6 +150,8 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **Logistic regression:** a model that gives a probability (here, the chance of weak growth) instead of a number.
 - **Log loss:** a score for probability predictions. Lower is better, and being confidently wrong costs the most.
 - **Regularization (λ):** a penalty that keeps the model's weights small, so it does not fit noise in a small sample.
+- **Placebo test:** rerunning the analysis on fake data where the thing you care about (here, which years were consolidations) is shuffled at random. If the real result looks like the fake ones, it is probably not about that thing.
+- **Leak (leakage):** information from the test countries slipping into training or tuning, which makes a model look better than it is.
 - **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
 - **Learning curve:** a chart of the model's error during training. It should fall, then go flat.
 
