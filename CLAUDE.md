@@ -55,6 +55,12 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 
 **After each session:** update the notebook (`notebooks/MLxx_...`), `notes/sessionNN_log.md`, `README.md`, `PROGRESS.md` (plain words, new terms explained in "Words used here") and `progress/*.json`, then commit and push.
 
+## Where I am in my learning
+
+- ML Specialization: Course 1 done (5 Nov 2026). Course 2 Weeks 1–2 done (9 Nov): neural networks, forward propagation, TensorFlow (Sequential, compile, fit), ReLU / sigmoid / linear / softmax, from_logits, Adam, backprop. Next: Week 3 (evaluating models: train / cross-validation / test, bias and variance), then Week 4 (decision trees).
+- Causal Inference: The Mixtape: Chapters 1–3 done (potential outcomes, selection bias, ATE / ATT / ATU, randomization, SUTVA, randomization inference).
+- Use only methods I've covered so far. When a session needs something new, explain it simply first.
+
 ## From my learning notes
 
 I'll paste new lines under this heading over time.
@@ -64,3 +70,4 @@ I'll paste new lines under this heading over time.
 - Countries choose austerity (selection bias), consolidations spill over between EU countries, and the ΔCAPB ≥ 1.5 pp flag mixes tax rises and spending cuts.
 - With a few hundred country-years, prefer simple models (logistic regression, regularization, later trees). A neural network would likely overfit.
 - Placebo idea: shuffle the episode years within each country to see how unusual the real effect is.
+- Neural network setup if one is ever used: ReLU in hidden layers, a linear output with from_logits=True, Adam. Report the parameter count against the number of training rows.
