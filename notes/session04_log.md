@@ -34,6 +34,39 @@
 - **The one bright spot is luck.** On the year-adjusted target the network looks clearly better on the six hidden countries (log loss 0.639, accuracy 72 %). But that is seed 0 on one split: with seeds 1–4 the same test gives 0.659 to 0.751, the fairer tests show no gain, and the random splits are a coin flip (49 %).
 - **The network's settings jump around.** Across the 24 rounds the original-target network chose 5 different settings (8 or 4 units with λ = 3 most often), and the year-adjusted one chose 8 different settings. Logistic regression chose λ = 100 in 23 of 24 rounds (22 of 24 year-adjusted). When the best setting changes with every small change in the data, there is no stable pattern to find.
 
+**Logistic regression, original target: each country hidden in turn, per country**
+
+Sorted from worst to best. The last column is each country's effect on the overall −5.2 % (episode-weighted; the column adds up to −5.2).
+
+| Country | Episodes | λ chosen | Log loss | Baseline | Gain vs baseline | Effect on overall (points) |
+|---|---|---|---|---|---|---|
+| Luxembourg | 5 | 10 | 1.705 | 0.674 | −152.9 % | −7.7 |
+| Latvia | 5 | 100 | 0.757 | 0.713 | −6.2 % | −0.3 |
+| Poland | 3 | 100 | 0.731 | 0.697 | −4.9 % | −0.2 |
+| Slovenia | 3 | 100 | 0.707 | 0.697 | −1.4 % | −0.0 |
+| Sweden | 2 | 100 | 0.701 | 0.693 | −1.1 % | −0.0 |
+| Denmark | 4 | 100 | 0.699 | 0.693 | −0.8 % | −0.0 |
+| Lithuania | 5 | 100 | 0.717 | 0.713 | −0.5 % | −0.0 |
+| Estonia | 3 | 100 | 0.688 | 0.690 | +0.2 % | +0.0 |
+| Austria | 3 | 100 | 0.710 | 0.713 | +0.4 % | +0.0 |
+| Hungary | 6 | 100 | 0.687 | 0.693 | +0.8 % | +0.1 |
+| Belgium | 1 | 100 | 0.635 | 0.642 | +1.1 % | +0.0 |
+| Slovakia | 6 | 100 | 0.685 | 0.693 | +1.2 % | +0.1 |
+| Germany | 1 | 100 | 0.711 | 0.725 | +2.0 % | +0.0 |
+| Cyprus | 5 | 100 | 0.686 | 0.700 | +2.1 % | +0.1 |
+| Finland | 4 | 100 | 0.673 | 0.693 | +3.0 % | +0.1 |
+| Portugal | 7 | 100 | 0.654 | 0.682 | +4.1 % | +0.3 |
+| Bulgaria | 5 | 100 | 0.664 | 0.695 | +4.5 % | +0.2 |
+| Croatia | 2 | 100 | 0.661 | 0.693 | +4.7 % | +0.1 |
+| Romania | 4 | 100 | 0.659 | 0.693 | +4.9 % | +0.2 |
+| Malta | 5 | 100 | 0.668 | 0.713 | +6.3 % | +0.3 |
+| Ireland | 6 | 100 | 0.668 | 0.724 | +7.7 % | +0.5 |
+| Spain | 2 | 100 | 0.582 | 0.631 | +7.9 % | +0.1 |
+| Italy | 3 | 100 | 0.562 | 0.621 | +9.5 % | +0.3 |
+| Greece | 6 | 100 | 0.622 | 0.693 | +10.3 % | +0.6 |
+
+When tuning behaves, logistic regression is about 2–3 % better than the guess, mostly in the crisis countries; one unstable tuning round (Luxembourg, λ = 10) is enough to make it worse overall. Not a usable predictor.
+
 **How much the seed matters (network, seeds 0–4)**
 
 | Target | Six hidden: log loss (settings chosen again per seed) | Each hidden in turn: log loss gain (settings fixed) | Countries won |
