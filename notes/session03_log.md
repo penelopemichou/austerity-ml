@@ -26,7 +26,8 @@
 | Controls only | 0.698 vs 0.710 (+1.6 %) | 40 % vs 40 % | 0.734 vs 0.694 (−5.8 %) | 63.5 % vs 49.0 % | 14 of 24 |
 
 - On the six hidden countries the model is a little better on log loss, but it makes the same yes/no calls as the baseline (40 % accuracy each).
-- With every country hidden in turn, the pooled log loss is *worse* than the baseline (−5.2 %). In some rounds the inner loop picks a small λ, and those confident models are badly wrong.
+- With every country hidden in turn, the pooled log loss is *worse* than the baseline (−5.2 %).
+- After the fix, λ barely varies: 23 of the 24 rounds choose λ = 100 and only Luxembourg's round chooses λ = 10, but that one round is so wrong (log loss 1.705 against 0.674 for the baseline) that it turns the pooled result negative; the other 23 rounds together score 0.677 against 0.695.
 - Over 500 random sets of six hidden countries (λ fixed at 100), log loss beats the baseline in 76 % of splits but only by a median of +1.6 %; accuracy wins in 60 % (median +4.8 points).
 - The baseline is weak here, because the classes are almost 50/50 and the majority class flips between rounds. Always guessing "weak" on all 96 episodes would be right 51 % of the time.
 - Without the inflation cap, the results barely change (each hidden in turn: −4.8 %, accuracy 62.5 %), so the cap was not decisive.
@@ -89,6 +90,7 @@
 - On accuracy, they are: only 2–3 % of the fake versions get the yes/no calls right as often. With λ = 100 the model's chances stay close to 50 %, so its calls depend on small tilts. For the real episodes those tilts point the right way more often than for random years.
 - So the real consolidation years carry a faint pattern that random years do not. It is far too weak to predict with (the model is barely more confident than a coin), it shows up in one measure but not the other, and four comparisons were made, so one or two small shares can happen by chance.
 - It is also not causal. Countries choose when to consolidate, and the thesis pre-trend shows they were already diverging, so the pattern can come from what goes with consolidating, not from the consolidation itself.
+- **Caveat:** the placebo uses λ = 100 fixed in every round, chosen on the real episodes' training countries. That makes it slightly optimistic: those countries are also hidden in turn here, so λ was not chosen fully out of sample. It may also slightly favour the real episodes, because the shuffled versions do not get to choose their own λ. A fully clean version would choose λ again inside every round for every shuffle (about 7 hours). It was not run, because the honest headline (−5.2 %, with λ chosen inside each round) already shows no usable predictor.
 
 **Main lessons**
 - Leakage can hide in the tuning step. Choosing λ looked "inside the training countries", but one line let the hidden countries in, and it turned a loss into an apparent win. A result that beats every fixed setting is a warning sign.
