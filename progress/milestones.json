@@ -1,6 +1,8 @@
 [
   {"date": "2026-11-09", "step": "Placebo test for Session 3: the real consolidation years carry a faint pattern (2–3 % of shuffles match on accuracy, not unusual on log loss)"},
   {"date": "2026-11-09", "step": "Fixed a leak in how Session 3 chose λ: the corrected yes/no model does not beat the simple guess when every country takes a turn"},
+  {"date": "2026-11-05", "step": "Course 1 of the Machine Learning Specialization finished (certificate, 99.66 %). Next: Course 2 (neural networks and decision trees), with a decision-tree test of the large-consolidation threshold"},
+  {"date": "2026-11-05", "step": "Practice notebook ML03b completed by me: all 25 checks pass; completed copy saved in notebooks/"},
   {"date": "2026-11-05", "step": "Practice notebook ML03b added: write logistic regression, a decision boundary and an overfitting demo myself, with PASS/FAIL tests"},
   {"date": "2026-11-05", "step": "Pre-trend check for Session 3: TFP growth before the episode adds only a faint signal; 5 episodes from 1997 lost"},
   {"date": "2026-11-05", "step": "Year-adjusted check for Session 3: compared with its own year, the yes/no model's gain mostly disappears"},

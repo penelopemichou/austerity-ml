@@ -4,7 +4,7 @@
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** all 3 planned sessions are done. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** Course 1 is finished and its 3 sessions are done; Session 4 (Course 2: neural networks and decision trees) is next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -12,7 +12,7 @@ Each session applies one week of Andrew Ng's [Machine Learning Specialization](h
 
 ```mermaid
 flowchart LR
-    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done
+    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>Decision trees: a threshold?<br/>Course 2"]:::next
     classDef done fill:#d8ecd9,stroke:#3c7a45,color:#1b3a20
     classDef next fill:#fff4d6,stroke:#b8860b,color:#4a3600
     classDef later fill:#eeeeee,stroke:#999999,color:#555555
