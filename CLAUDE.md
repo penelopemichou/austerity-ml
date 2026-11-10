@@ -57,7 +57,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 
 ## Where I am in my learning
 
-- ML Specialization: Course 1 done (5 Nov 2026). Course 2 Weeks 1–2 done (9 Nov): neural networks, forward propagation, TensorFlow (Sequential, compile, fit), ReLU / sigmoid / linear / softmax, from_logits, Adam, backprop. Next: Week 3 (evaluating models: train / cross-validation / test, bias and variance), then Week 4 (decision trees).
+- ML Specialization: Course 1 done (5 Nov 2026). Course 2 Weeks 1–2 done (9 Nov): neural networks, forward propagation, TensorFlow (Sequential, compile, fit), ReLU / sigmoid / linear / softmax, from_logits, Adam, backprop. Course 2 Week 3 Parts A–B done (10 Nov): train / cross-validation / test sets, model selection, bias and variance, baselines, learning curves. Next: the rest of Week 3, then Week 4 (decision trees).
 - Causal Inference: The Mixtape: Chapters 1–3 done (potential outcomes, selection bias, ATE / ATT / ATU, randomization, SUTVA, randomization inference).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
