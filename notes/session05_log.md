@@ -60,6 +60,28 @@
 - **Luxembourg again.** With the original target, Luxembourg's round chose degree 3 with λ = 10 and scored a log loss of 5.91 against 0.674 for the guess: that one round costs 39.3 points, more than the whole −32.4 %. With the year-adjusted target its round chose degree 1 with λ = 10 (1.313 vs 0.691, −4.6 points). The next worst rounds (Hungary, Estonia, Spain) cost less than 1 point each.
 - Without Luxembourg's round the overall result would be roughly +7 % (original) and +4 % (year-adjusted). Together with 69–77 % of random splits, this is the most frequent small gain so far. But one unstable tuning round still decides the sign, the gain is small, the 500 splits use the setting chosen once (slightly optimistic), and no placebo check has been run on degree 2. A lead to check, not a usable predictor.
 
+**Placebo test for the degree-2 model (added 10 Nov 2026)**
+- Within each country, the ΔCAPB values were shuffled across years, so each country keeps its number of episodes and their sizes but *which years* count as consolidations becomes random. The model was rerun on each shuffled panel with every country hidden in turn.
+- Fast version: 500 shuffles, settings fixed at the section 3 choice (degree 2; λ = 100 / 30). Slightly optimistic and may favour the real episodes, as in Session 3. Clean version: 100 shuffles, degree and λ chosen again by cross-validation inside every round, so nothing is tuned on the real episodes.
+
+| | Original, fast | Original, clean | Year-adjusted, fast | Year-adjusted, clean |
+|---|---|---|---|---|
+| Shuffles | 500 | 100 | 500 | 100 |
+| Real: log loss vs baseline | +4.1 % | −32.4 % | +5.6 % | −0.6 % |
+| Shuffled: median (middle 90 %) | +0.4 % (−6.4 to +6.2) | −6.5 % (−40.0 to +5.2) | −3.5 % (−19.5 to +7.9) | −7.6 % (−29.4 to +4.1) |
+| Shuffles at least as good (log loss) | 15 % | 94 % | 10 % | 15 % |
+| Real: accuracy minus baseline | +11.5 points | +9.4 | +16.7 | +17.7 |
+| Shuffled accuracy: median (middle 90 %) | +3.1 (−3.1 to +18.7) | +1.0 (−4.2 to +18.8) | +5.2 (−2.1 to +18.8) | +1.0 (−2.1 to +13.6) |
+| Shuffles at least as good (accuracy) | 12 % | 9 % | 6 % | **2 %** |
+| Countries won: real vs shuffled median | 16 vs 14 | 15 vs 14 | 13 vs 14 | 14 vs 14 |
+
+- **On log loss, the real episodes are not unusual** in any version: 10–15 % of shuffles do at least as well, and with the original target and tuning in every round, 94 % do (the real result is worse than most shuffles, because of Luxembourg's round). The small degree-2 gain is not specific to the consolidation years.
+- **On accuracy, one version stands out:** with the year-adjusted target and tuning in every round, only 2 % of shuffles get as many yes/no calls right. The other versions are 6–12 %. This matches the Session 3 placebo (2–3 % on accuracy, not unusual on log loss): a faint pattern in which side of 50 % the predictions fall, tied to the real years, but not in how confident they are. With 8 comparisons, one 2 % is weak evidence.
+- **Unstable tuning is general, not only Luxembourg:** the shuffled panels with tuning in every round have a median of −6.5 % and −7.6 %, and some fall below −40 %. When the best setting has to be chosen on about 50 episodes, a badly wrong round is common.
+- **Conclusion:** the degree-2 lead does not survive the placebo on log loss. Still no usable predictor.
+
+**Why Luxembourg goes wrong (checked 10 Nov):** its trade openness in the five episodes is 240 to 376 % of GDP (z-scores 1.7 to 3.6); the median episode is 109 %, and the next most open countries average 150 to 207 % (Hungary, Malta, Ireland). When Luxembourg is hidden, the model has to extrapolate far outside what it was trained on, and squared or cubed terms make that extreme. The thesis does not have this problem because country fixed effects absorb each country's usual openness. Dropping Luxembourg would choose the sample by the result; a rule for all countries (log of trade openness, or capping inputs at the training range when predicting) is the better fix, decided before rerunning.
+
 **Main lessons**
 - J_train and J_cv together show what a single score cannot: low J_train with high J_cv is overfitting; both stuck at the guess means nothing is being learned.
 - The J_cv of the chosen model is optimistic, because it won a contest on the same folds (0.643 in cross-validation, 0.704 with every country hidden in turn).
@@ -67,4 +89,6 @@
 - A test set read in every session slowly stops being a test set.
 - Unstable tuning is the weak point: in Sessions 3, 4 and 5 the worst round is Luxembourg, where tuning picks a less regularized model and is badly wrong.
 
-**Next:** Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold. Worth checking first: a placebo test for the degree-2 model, and whether Luxembourg's episodes are unusual.
+- A placebo with tuning inside every round needs no caveat; it costs time (here 100 shuffles in parallel, about 10 minutes), but it is the clean version.
+
+**Next:** Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold. Possible check before that: log of trade openness (or inputs capped at the training range), decided first and then run through all the tests.

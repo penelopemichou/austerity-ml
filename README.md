@@ -82,7 +82,9 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Learning curves:** for the regularized models, J_train and J_cv close in on the simple guess as countries are added (at 16 countries: J_cv 0.695 and 0.714 vs 0.694). For the flexible model the gap is huge and closes slowly. The limit looks like the information in these inputs, not model size or the amount of data.
 - **The cross-validation choice (degree 2) through the three tests:** six hidden 0.667 vs 0.710 and 0.624 vs 0.718; random splits better in 77 % and 69 % (median +2.9 % and +3.5 %), the most frequent small gain so far. But each hidden in turn gives −32.4 % and −0.6 %, almost entirely from Luxembourg's round, where tuning picked a more flexible setting (log loss 5.91 vs 0.674 on the original target).
 - The six hidden countries have been read in every session, so they are no longer a clean test set; the repeated tests matter more.
-- Verdict: still no usable predictor. Next check for the degree-2 lead: a placebo test.
+- **Placebo test** (episode years shuffled within each country; 500 shuffles with settings fixed, 100 with degree and λ chosen again in every round): on log loss the real episodes are not unusual (10–15 % of shuffles do as well; 94 % with the original target and tuning in every round). On accuracy, the year-adjusted target with tuning in every round stands out (2 % of shuffles match it), the same pattern as the Session 3 placebo. The degree-2 lead does not survive on log loss.
+- **Why Luxembourg goes wrong:** its trade openness is 240–376 % of GDP against a median episode of 109 %, so when it is hidden the model extrapolates far outside its training data. Dropping it would choose the sample by the result; a rule for all countries (log of trade openness, or capping inputs at the training range) is the better fix.
+- Verdict: still no usable predictor.
 
 ## Structure
 
