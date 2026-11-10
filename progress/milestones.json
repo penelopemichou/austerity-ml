@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-10", "step": "Log of trade openness, as a rule for every country: the degree-2 model edges past the simple guess in all three tests for the first time (+1.7 % and +1.9 % with every country hidden in turn); placebo still to run"},
   {"date": "2026-11-10", "step": "Placebo test for the degree-2 model: not unusual on log loss (10–15 % of shuffles do as well); Luxembourg's problem traced to its very high trade openness"},
   {"date": "2026-11-10", "step": "Session 5 Part A finished: J_train vs J_cv and learning curves show the models meet at the simple guess; a degree-2 model gains a little in most random splits, but Luxembourg's round again makes it worse overall"},
   {"date": "2026-11-10", "step": "Course 2 Week 3 Parts A–B finished (train / cross-validation / test sets, model selection, bias and variance, baselines, learning curves)"},

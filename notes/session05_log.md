@@ -80,7 +80,30 @@
 - **Unstable tuning is general, not only Luxembourg:** the shuffled panels with tuning in every round have a median of −6.5 % and −7.6 %, and some fall below −40 %. When the best setting has to be chosen on about 50 episodes, a badly wrong round is common.
 - **Conclusion:** the degree-2 lead does not survive the placebo on log loss. Still no usable predictor.
 
-**Why Luxembourg goes wrong (checked 10 Nov):** its trade openness in the five episodes is 240 to 376 % of GDP (z-scores 1.7 to 3.6); the median episode is 109 %, and the next most open countries average 150 to 207 % (Hungary, Malta, Ireland). When Luxembourg is hidden, the model has to extrapolate far outside what it was trained on, and squared or cubed terms make that extreme. The thesis does not have this problem because country fixed effects absorb each country's usual openness. Dropping Luxembourg would choose the sample by the result; a rule for all countries (log of trade openness, or capping inputs at the training range when predicting) is the better fix, decided before rerunning.
+**Why Luxembourg goes wrong (checked 10 Nov):** its trade openness in the five episodes is 240 to 376 % of GDP (z-scores 1.9 to 4.0 among the 96 episodes); the median episode is 109 %, and the next most open countries average 150 to 207 % (Hungary, Malta, Ireland). When Luxembourg is hidden, the model has to extrapolate far outside what it was trained on, and squared or cubed terms make that extreme. The thesis does not have this problem because country fixed effects absorb each country's usual openness. Dropping Luxembourg would choose the sample by the result; a rule for all countries (log of trade openness, or capping inputs at the training range when predicting) is the better fix, decided before rerunning.
+
+**A rule for every country: the log of trade openness (added 10 Nov 2026)**
+- Decided before running: use the natural log of trade openness for every country; nothing else changes (same degrees, λ values, cross-validation groups, targets and tests). Luxembourg stays in. Its episodes' z-scores fall from 1.9–4.0 to 1.7–2.7.
+
+| Test | Original, raw | Original, log | Year-adjusted, raw | Year-adjusted, log |
+|---|---|---|---|---|
+| Chosen on the training countries (degree, λ) | (2, 100) | (2, 30) | (2, 30) | (2, 10) |
+| Lowest J_cv vs simple guess | 0.680 vs 0.698 | 0.674 vs 0.698 | 0.643 vs 0.696 | 0.614 vs 0.696 |
+| Six hidden: log loss vs baseline | 0.667 vs 0.710 | 0.620 vs 0.710 | 0.624 vs 0.718 | 0.594 vs 0.718 |
+| Six hidden: accuracy vs baseline | 52 % vs 40 % | 72 % vs 40 % | 52 % vs 40 % | 60 % vs 40 % |
+| Each hidden in turn: log loss vs baseline | 0.919 vs 0.694 (−32.4 %) | **0.682 vs 0.694 (+1.7 %)** | 0.704 vs 0.700 (−0.6 %) | **0.686 vs 0.700 (+1.9 %)** |
+| Each hidden in turn: accuracy vs baseline | 58.3 % vs 49.0 % | 62.5 % vs 49.0 % | 60.4 % vs 42.7 % | 61.5 % vs 42.7 % |
+| Countries won | 15 of 24 | 16 of 24 | 14 of 24 | 13 of 24 |
+| 500 random splits: log loss better | 77 % (median +2.9 %) | **84 % (median +6.8 %)** | 69 % (median +3.5 %) | 64 % (median +3.3 %) |
+| Luxembourg's round (effect on overall) | −39.3 points | −6.6 points | −4.6 points | −3.0 points |
+
+- **The rule fixes most of the Luxembourg problem.** Its round still goes worst (log loss 1.554 vs 0.674 on the original target), but costs 6.6 points instead of 39.3. Tuning is also steadier: degree 2 is chosen in 22 of 24 rounds on the original target.
+- **For the first time a model beats the simple guess in all three tests**, on both targets: +1.7 % and +1.9 % with every country hidden in turn, and better in 84 % and 64 % of random splits.
+- **But read it carefully.**
+  - The gain is small: about 2 % in log loss with every country hidden in turn, and the year-adjusted model wins only 13 of 24 countries.
+  - The rule is principled and was fixed before running, but it was chosen *after* seeing Luxembourg's problem, and across Sessions 3–5 many versions have been tried. Among that many tries, one small positive result can appear by chance.
+  - The placebo above was run on raw trade openness, where the gain was not unusual. It has not been run on this version, so there is no evidence yet that the gain is about consolidations rather than about the controls predicting TFP growth in general.
+- **Conclusion:** a small, promising result, not yet a finding. The next check is the placebo on the log version.
 
 **Main lessons**
 - J_train and J_cv together show what a single score cannot: low J_train with high J_cv is overfitting; both stuck at the guess means nothing is being learned.
@@ -91,4 +114,6 @@
 
 - A placebo with tuning inside every round needs no caveat; it costs time (here 100 shuffles in parallel, about 10 minutes), but it is the clean version.
 
-**Next:** Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold. Possible check before that: log of trade openness (or inputs capped at the training range), decided first and then run through all the tests.
+- Fix an outlier's problem with a rule for every country, not by dropping the country. Here the log of trade openness turned −32.4 % into +1.7 %.
+
+**Next:** the placebo test on the log version (with tuning in every round). Then Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold.

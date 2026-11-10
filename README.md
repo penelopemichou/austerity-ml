@@ -84,7 +84,8 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - The six hidden countries have been read in every session, so they are no longer a clean test set; the repeated tests matter more.
 - **Placebo test** (episode years shuffled within each country; 500 shuffles with settings fixed, 100 with degree and λ chosen again in every round): on log loss the real episodes are not unusual (10–15 % of shuffles do as well; 94 % with the original target and tuning in every round). On accuracy, the year-adjusted target with tuning in every round stands out (2 % of shuffles match it), the same pattern as the Session 3 placebo. The degree-2 lead does not survive on log loss.
 - **Why Luxembourg goes wrong:** its trade openness is 240–376 % of GDP against a median episode of 109 %, so when it is hidden the model extrapolates far outside its training data. Dropping it would choose the sample by the result; a rule for all countries (log of trade openness, or capping inputs at the training range) is the better fix.
-- Verdict: still no usable predictor.
+- **Log of trade openness, as a rule for every country** (decided before running; Luxembourg kept): Luxembourg's round costs 6.6 points instead of 39.3, and the degree-2 model beats the simple guess in all three tests for the first time: each hidden in turn 0.682 vs 0.694 (+1.7 %) and 0.686 vs 0.700 (+1.9 %), random splits better in 84 % and 64 %. The gain is small, the rule was chosen after seeing the problem, and the placebo has not yet been run on this version.
+- Verdict: a small, promising result, not yet a finding. Next check: the placebo on the log version.
 
 ## Structure
 
