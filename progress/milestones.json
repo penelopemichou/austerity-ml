@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-10", "step": "Session 5 Part A finished: J_train vs J_cv and learning curves show the models meet at the simple guess; a degree-2 model gains a little in most random splits, but Luxembourg's round again makes it worse overall"},
   {"date": "2026-11-10", "step": "Course 2 Week 3 Parts A–B finished (train / cross-validation / test sets, model selection, bias and variance, baselines, learning curves)"},
   {"date": "2026-11-09", "step": "Session 4 notebook finished: a small neural network does not beat logistic regression or the simple guess in the fair tests; results move a lot with the random seed"},
   {"date": "2026-11-09", "step": "Course 2 Weeks 1–2 finished (neural networks, TensorFlow, Adam, softmax)"},

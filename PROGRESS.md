@@ -1,10 +1,10 @@
 # Progress
 
-*Last updated: 9 Nov 2026, after Session 4 (a small neural network).*
+*Last updated: 10 Nov 2026, after Session 5 Part A (evaluating models).*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** Course 1 is finished, and so are Course 2 Weeks 1–2 and the first half of Week 3 (evaluating models). Four sessions are done; Session 5 (evaluating models, then decision trees) is next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. A small neural network does no better: it only looked good on one lucky split with one lucky random seed. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** Course 1 is finished, and so are Course 2 Weeks 1–2 and the first half of Week 3 (evaluating models). Four sessions are done, and the first half of Session 5 (evaluating models); decision trees come next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. A small neural network does no better: it only looked good on one lucky split with one lucky random seed. Checking the models the Week 3 way shows they all settle at the level of the simple guess as data is added, and more flexible models only fit noise. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -12,7 +12,7 @@ Each session applies one week of Andrew Ng's [Machine Learning Specialization](h
 
 ```mermaid
 flowchart LR
-    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>A small neural network<br/>Course 2, Weeks 1–2"]:::done --> S5["<b>Session 5</b><br/>Decision trees: a threshold?<br/>Course 2, Weeks 3–4"]:::next
+    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>A small neural network<br/>Course 2, Weeks 1–2"]:::done --> S5["<b>Session 5</b><br/>Part A done: evaluating models<br/>Part B next: decision trees<br/>Course 2, Weeks 3–4"]:::next
     classDef done fill:#d8ecd9,stroke:#3c7a45,color:#1b3a20
     classDef next fill:#fff4d6,stroke:#b8860b,color:#4a3600
     classDef later fill:#eeeeee,stroke:#999999,color:#555555
@@ -135,6 +135,18 @@ The same yes/no question as Session 3, now with a tiny neural network: one hidde
 
 **In plain words:** no. When every country takes a turn, the network is worse than the simple guess, and no better than logistic regression. It looks impressive once, on the six hidden countries with the "same year" target (72 % right). But that was one random starting point (seed): with four other seeds the same test gives a log loss anywhere from 0.66 to 0.75, and in random splits it wins only half the time. Even the smallest network here has about one adjustable number for every five training episodes, and the largest almost one per episode. More flexibility adds parameters, not information. A three-way version (weak / middle / strong growth) does not beat the guess either.
 
+### Session 5, Part A: why don't the models beat the guess?
+
+Week 3 of Course 2 gives tools to tell *why* a model falls short. The idea: compare the error on the countries a model learned from (**J_train**) with the error on countries held back to choose settings (**J_cv**), against the simple guess.
+
+- **Too flexible (high variance):** J_train is low but J_cv is high. The model memorises the training countries. That is what happens here with lots of polynomial features and little regularization: a degree-3 model scores 0.12 on its own training countries and 2.9 on others (the simple guess scores about 0.70).
+- **Held back enough:** J_train and J_cv both settle at about the simple guess. A slightly curved (degree-2) model dips a little below it in cross-validation, and is the best model found here.
+- **Would more data help? (learning curves)** As training countries are added, the held-back models' two errors close in on the simple guess from both sides. More data makes them *as good as* the guess, not better. The flexible model would need far more countries than the EU has.
+
+**In plain words:** the models are not too simple, and they are not just short of data. These inputs seem to carry very little information about productivity growth over the next few years.
+
+When the best model from this step (degree 2) went through the usual tests, it beat the guess in 69–77 % of random splits, by a median of about 3 %. That is the most frequent small gain so far. But with every country taking a turn it is still worse overall (−32 % and −1 %), and again almost all of that comes from Luxembourg: in its turn the model picked a much more flexible setting and was badly wrong. A lead to check, not a usable predictor.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -147,6 +159,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 | 2 ([notebook](notebooks/ML02_multiple_inputs_vectorized_gradient_descent.ipynb), [log](notes/session02_log.md)) | Added the four thesis controls and a yes/no consolidation flag, scaled the inputs using the training countries only, and trained with vectorized gradient descent. | The effect moved close to the thesis, but prediction did not improve. **One test can flatter a model.** Checking the inputs also exposed a real data error. |
 | 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | No gain over the simple guess once a leak in how λ was chosen is fixed. A placebo test finds a faint pattern in the real consolidation years, too weak to predict with. **Leakage can hide in the tuning step, and a model can predict for the wrong reason.** |
 | 4 ([notebook](notebooks/ML04_neural_network_episode_classifier.ipynb), [log](notes/session04_log.md)) | Trained a tiny neural network on the same yes/no question, chose its size and λ on the training countries only, compared it with logistic regression, and checked how much the random seed matters. | No gain: worse than the simple guess when every country takes a turn. One good seed on one split was luck. **On little data, a more flexible model adds parameters, not information.** |
+| 5a ([notebook](notebooks/ML05a_evaluating_models_bias_variance.ipynb), [log](notes/session05_log.md)) | Compared errors on training and held-back countries for simple and curved logistic regression, drew learning curves, and ran the cross-validation choice through the usual tests. | The models settle at the simple guess as data is added; more flexibility only fits noise. **The limit is the information in the data, not the model.** |
 | 3b ([practice notebook](notebooks/ML03b_logistic_regression_practice.ipynb)) | Exercises to write the sigmoid, cost, gradient and gradient descent myself, draw a decision boundary, and watch a wiggly curve overfit, each checked against scikit-learn. | Done: see my completed version below. |
 | 3b, completed ([notebook](notebooks/ML03b_logistic_regression_practice_completed.ipynb)) | My own answers to the three practice exercises. | All 25 checks pass against scikit-learn. |
 
@@ -171,7 +184,10 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **Parameters:** the numbers a model adjusts while learning (weights and biases). Many parameters and few rows make it easy to fit noise.
 - **Adam:** a version of gradient descent that adjusts the step size for each parameter by itself.
 - **Random seed:** the starting point for the random numbers, such as a network's first weights. Fixing it makes a run repeatable; changing it shows how much luck is involved.
+- **Training / cross-validation / test set:** countries the model learns from; countries held back to choose its settings; countries held back to report the final result (used once, at the end).
+- **J_train and J_cv:** the error on the training countries and on the cross-validation countries.
+- **High bias / high variance:** a model too simple to fit even its training data (high bias), or one that fits its training data but not new data (high variance).
 - **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
-- **Learning curve:** a chart of the model's error during training. It should fall, then go flat.
+- **Learning curve:** two kinds. In Course 1, a chart of the model's error during training: it should fall, then go flat. In Course 2 Week 3, a chart of J_train and J_cv as the amount of training data grows: it shows whether more data would help.
 
 The numbers in this file come from [`progress/`](progress/), which also feeds my private progress dashboard. Both are updated after every session.

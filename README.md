@@ -35,6 +35,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 3b | `ML03b_logistic_regression_practice` | C1 Week 3: practice exercises in the style of the course labs | Exercises with PASS/FAIL tests; solutions in `notes/ML03b_solutions.py` |
 | 3b | `ML03b_logistic_regression_practice_completed` | C1 Week 3: my own answers to the practice exercises | All 25 checks pass |
 | 4 | `ML04_neural_network_episode_classifier` | C2 Weeks 1–2: neural networks, TensorFlow, ReLU, from_logits, Adam, softmax | See below |
+| 5a | `ML05a_evaluating_models_bias_variance` | C2 Week 3: train / cross-validation / test, bias and variance, learning curves | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -73,6 +74,15 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **One lucky result:** on the six hidden countries with the year-adjusted target it scores 0.639 vs 0.718 and 72 % vs 40 % accuracy, but only with seed 0. Seeds 1–4 give 0.659 to 0.751, and the settings chosen change from round to round (8 different ones in 24 rounds).
 - Optional three-class softmax version (weak / middle / strong, year-adjusted): no better than the most common class (each hidden in turn −6.1 %, accuracy 33 % vs 35 %).
 - Verdict: a more flexible model does not find what a simple one could not. ML still adds nothing reliable over the econometrics.
+
+### Session 5, Part A: evaluating models (bias, variance, learning curves)
+
+- Logistic regression on polynomial features of the five inputs (degree 1–3: 5, 20 or 55 features), λ from 0.01 to 1000, J_train and J_cv from 4 groups of training countries, the simple guess as the baseline level.
+- **Classic high variance with little regularization:** degree 3 with λ = 0.01 has J_train 0.12 and J_cv 2.9 (guess about 0.70). With more regularization both converge to the guess. Degree 1 never gets below it in cross-validation; degree 2 dips slightly (J_cv 0.680 vs 0.698 original, 0.643 vs 0.696 year-adjusted).
+- **Learning curves:** for the regularized models, J_train and J_cv close in on the simple guess as countries are added (at 16 countries: J_cv 0.695 and 0.714 vs 0.694). For the flexible model the gap is huge and closes slowly. The limit looks like the information in these inputs, not model size or the amount of data.
+- **The cross-validation choice (degree 2) through the three tests:** six hidden 0.667 vs 0.710 and 0.624 vs 0.718; random splits better in 77 % and 69 % (median +2.9 % and +3.5 %), the most frequent small gain so far. But each hidden in turn gives −32.4 % and −0.6 %, almost entirely from Luxembourg's round, where tuning picked a more flexible setting (log loss 5.91 vs 0.674 on the original target).
+- The six hidden countries have been read in every session, so they are no longer a clean test set; the repeated tests matter more.
+- Verdict: still no usable predictor. Next check for the degree-2 lead: a placebo test.
 
 ## Structure
 
