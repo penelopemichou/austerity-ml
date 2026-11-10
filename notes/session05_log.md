@@ -105,6 +105,24 @@
   - The placebo above was run on raw trade openness, where the gain was not unusual. It has not been run on this version, so there is no evidence yet that the gain is about consolidations rather than about the controls predicting TFP growth in general.
 - **Conclusion:** a small, promising result, not yet a finding. The next check is the placebo on the log version.
 
+**Placebo test on the log version (added 10 Nov 2026)**
+- The same two versions as for raw trade openness: 500 shuffles with the settings fixed at the section 7 choice (slightly optimistic, may favour the real episodes), and 100 shuffles with degree and λ chosen again in every round (no such caveat).
+
+| | Original, fast | Original, clean | Year-adjusted, fast | Year-adjusted, clean |
+|---|---|---|---|---|
+| Shuffles | 500 | 100 | 500 | 100 |
+| Real: log loss vs baseline | +8.8 % | +1.7 % | +7.8 % | +1.9 % |
+| Shuffled: median (middle 90 %) | −1.9 % (−15.5 to +8.8) | −3.8 % (−20.8 to +6.2) | −7.1 % (−33.9 to +8.3) | −3.2 % (−14.9 to +6.9) |
+| Shuffles at least as good (log loss) | 5 % | 16 % | 6 % | 21 % |
+| Real: accuracy minus baseline | +16.7 points | +13.5 | +19.8 | +18.8 |
+| Shuffles at least as good (accuracy) | 8 % | 9 % | 5 % | **2 %** |
+| Countries won: real vs shuffled median | 16 vs 13 | 16 vs 14 | 12 vs 13 | 13 vs 14 |
+
+- **The clean version decides it:** with the settings chosen in every round, 16 % and 21 % of shuffled panels do at least as well on log loss. The small gain is not unusual, so it mostly comes from the controls predicting TFP growth in general, not from which years were consolidations.
+- The fast version looks better (5–6 % of shuffles as good), but its settings were tuned on the real episodes, which favours them. That gap is exactly why the clean version is the one to trust.
+- **The same accuracy pattern for the third time:** with the year-adjusted target and tuning in every round, only 2 % of shuffles get as many yes/no calls right (Session 3 placebo: 2–3 %; raw trade openness above: 2 %). It is one faint pattern seen three times on the same data, not three independent confirmations, and it shows up in which side of 50 % the predictions fall, not in how confident they are.
+- **Conclusion:** the log rule fixes the Luxembourg problem and gives the first model that beats the guess in all three tests, but the placebo shows the gain is not about consolidations. Still no usable predictor of which consolidations are followed by weak growth.
+
 **Main lessons**
 - J_train and J_cv together show what a single score cannot: low J_train with high J_cv is overfitting; both stuck at the guess means nothing is being learned.
 - The J_cv of the chosen model is optimistic, because it won a contest on the same folds (0.643 in cross-validation, 0.704 with every country hidden in turn).
@@ -112,8 +130,9 @@
 - A test set read in every session slowly stops being a test set.
 - Unstable tuning is the weak point: in Sessions 3, 4 and 5 the worst round is Luxembourg, where tuning picks a less regularized model and is badly wrong.
 
+- A placebo is what turns "it beats the guess" into "it beats the guess *because of the consolidations*". Here the first win in all three tests did not pass it.
 - A placebo with tuning inside every round needs no caveat; it costs time (here 100 shuffles in parallel, about 10 minutes), but it is the clean version.
 
 - Fix an outlier's problem with a rule for every country, not by dropping the country. Here the log of trade openness turned −32.4 % into +1.7 %.
 
-**Next:** the placebo test on the log version (with tuning in every round). Then Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold.
+**Next:** Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold, using the log of trade openness and the clean placebo from the start.
