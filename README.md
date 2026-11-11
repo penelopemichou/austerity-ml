@@ -93,12 +93,13 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 ### Session 5, Part B: decision trees (is there a large-consolidation threshold?)
 
 - **Threshold:** on all 669 country-years, average TFP growth from t−1 to t+2 is about 3.6–3.8 % for ΔCAPB up to 3 pp, then 2.1 % for 3–4.5 pp and 0.2 % above 4.5 pp. A ΔCAPB-only stump cuts at **3.45 pp** in 25 of 26 leave-one-country-out rounds (+3.69 % below vs +0.28 % above; year-adjusted +0.86 % vs −1.92 %). The gap holds with medians and without Greece. This supports Session 2's hint of about 3 pp rather than the thesis's 1.5 pp flag as the point where growth clearly falls. But only 30 country-years lie above the cut (mostly 2008–2013 crisis consolidations), the stump predicts no better than the mean (+0.7 % / −1.6 %), and selection is an obvious alternative explanation.
+- **Placebo for the threshold:** with ΔCAPB shuffled across years within each country 500 times and the best cut searched again each time, only 1.6 % (original) and 2.6 % (year-adjusted) of shuffles give a growth gap as large as the real one. The threshold is unlikely to be chance: the first result here to pass a placebo on its main measure. It shows that the timing of the largest tightenings goes with weaker growth afterwards, not that they caused it.
 - **Among the 96 episodes, trees never split on ΔCAPB** (1 of 24 rounds on the original target, 0 on the year-adjusted one); they split on lagged inflation, debt and trade openness.
 - **Prediction, every country hidden in turn (log loss vs baseline):** logistic regression +1.7 % / +1.9 %, single tree −7.4 % / −7.4 %, random forest +6.6 % / +3.0 %, XGBoost +8.3 % / +0.8 % (original / year-adjusted). Ensembles beat a single tree and, on the original target, logistic regression. XGBoost has the best balance of precision and recall for "weak" (0.67 / 0.63).
 - **Clean placebo:** 7–30 % of shuffled panels do at least as well as the ensembles, so the gain is not about the consolidations.
 - **Error analysis:** Luxembourg is again the top source of loss for logistic regression and the ensembles. Ireland's 2015 GDP jump puts TFP growth of about +25 % into the 2013–2015 windows, a data quirk to treat like the 2010–11 accounting years.
 - **Grouping by year vs country** (LinkedIn question): with year blocks held out (3-year gap), logistic regression goes from +8.7 % (country groups) to −13.2 %. Year mattered more.
-- Verdict: a stable descriptive threshold at about 3.5 pp, but no usable predictor, and ML still adds nothing reliable over the econometrics for which consolidations are followed by weak growth.
+- Verdict: a stable threshold at about 3.5 pp that passes a placebo, but descriptive, not causal, and no usable predictor; and ML still adds nothing reliable over the econometrics for which consolidations are followed by weak growth.
 
 ## Structure
 
