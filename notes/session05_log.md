@@ -123,6 +123,36 @@
 - **The same accuracy pattern for the third time:** with the year-adjusted target and tuning in every round, only 2 % of shuffles get as many yes/no calls right (Session 3 placebo: 2–3 %; raw trade openness above: 2 %). It is one faint pattern seen three times on the same data, not three independent confirmations, and it shows up in which side of 50 % the predictions fall, not in how confident they are.
 - **Conclusion:** the log rule fixes the Luxembourg problem and gives the first model that beats the guess in all three tests, but the placebo shows the gain is not about consolidations. Still no usable predictor of which consolidations are followed by weak growth.
 
+**Error analysis, and precision and recall (added 11 Nov 2026, after Course 2 Week 3)**
+- Model: the log-trade-openness version (degree 2, settings chosen again in every round, every country hidden in turn), so each of the 96 episodes has one out-of-sample prediction. "Weak" is the positive class.
+
+| | Original: model | Original: simple guess | Year-adjusted: model | Year-adjusted: simple guess |
+|---|---|---|---|---|
+| Accuracy | 62.5 % | 49.0 % | 61.5 % | 42.7 % |
+| Precision (weak) | 0.71 | 0.50 | 0.71 | 0.46 |
+| Recall (weak) | 0.45 | 0.90 | 0.44 | 0.54 |
+| F1 (weak) | 0.55 | 0.64 | 0.54 | 0.50 |
+| Precision (not weak) | 0.59 | 0.38 | 0.57 | 0.38 |
+| Recall (not weak) | 0.81 | 0.06 | 0.80 | 0.30 |
+| F1 (not weak) | 0.68 | 0.11 | 0.67 | 0.34 |
+| Says "weak" / "not weak" | 31 / 65 | 88 / 8 | 31 / 65 | 59 / 37 |
+
+- **The model is cautious about saying "weak".** When it does, it is right 71 % of the time, but it catches fewer than half of the truly weak episodes (recall 0.44–0.45). Most of its accuracy comes from the other side: it recognises 80 % of the "not weak" episodes.
+- **The simple guess says "weak" almost every time** on the original target (88 of 96, because "weak" is the majority in most training sets), so it catches 90 % of weak episodes but almost no others. On F1 for "weak" the guess even beats the model (0.64 vs 0.55). Accuracy alone hides that trade-off.
+
+**The episodes it gets most wrong, grouped by cause**
+- **One country:** Luxembourg's episodes are 4 of the 5 worst on the original target and the top 3 on the year-adjusted one. All were weak, and the model said 13–19 % chance of weak: its low debt, growth and (even after the log) high trade openness all point to "fine". Luxembourg alone adds 4.40 of excess loss beyond the guess on the original target; the next country (Hungary) adds 0.59. Its TFP may behave differently from the others' (a small economy dominated by finance), which no input here captures.
+- **Deep recessions:** Latvia 2010 (GDP −16 % the year before) and Estonia 2009 (−5 %) are among the worst on the year-adjusted target. Latvia 2010 was predicted weak (79 %) and was not; Estonia 2009 the other way round. Rare, extreme years are hard to learn from.
+- **High debt that did not mean weak growth:** Greece 2005 and 2022 (debt 106 % and 197 %) and Cyprus 2015 were predicted weak and were not.
+- **By period (original target):** the model beats the guess in 2008–2013 (log loss 0.619 vs 0.692), roughly ties in 1997–2007 (0.689 vs 0.695), and is worse in 2014–2022 (0.744 vs 0.694). So on the original target its gain is again mostly the crisis years. On the year-adjusted target the periods are about even (0.677–0.691 vs 0.697–0.706).
+- **By extreme inputs (any input more than 2 standard deviations from the average):** 17 episodes. On the original target the model is worse than the guess on them (0.731 vs 0.695); on the year-adjusted target slightly better (0.676 vs 0.693).
+- **By outcome:** better than the guess on the not-weak episodes (0.631 vs 0.715), worse on the weak ones (0.731 vs 0.673). The model leans optimistic.
+
+**What the error analysis says to do next (and not do)**
+- Not more data of the same kind, and not a bigger model (Sessions 4–5 showed both do not help).
+- The biggest single source of error is one country whose growth after consolidations does not follow its inputs. When that country is hidden, nothing in the training countries can teach the model about it. That is a limit of predicting for unseen countries, not something to fix by dropping it.
+- Inputs that describe a country's own situation better (for example its TFP growth before the episode, Session 3's pre-trend input, or the share of finance in the economy) are the kind of change error analysis points to. Any such input should be decided before running and placebo-checked.
+
 **Main lessons**
 - J_train and J_cv together show what a single score cannot: low J_train with high J_cv is overfitting; both stuck at the guess means nothing is being learned.
 - The J_cv of the chosen model is optimistic, because it won a contest on the same folds (0.643 in cross-validation, 0.704 with every country hidden in turn).
@@ -131,6 +161,8 @@
 - Unstable tuning is the weak point: in Sessions 3, 4 and 5 the worst round is Luxembourg, where tuning picks a less regularized model and is badly wrong.
 
 - A placebo is what turns "it beats the guess" into "it beats the guess *because of the consolidations*". Here the first win in all three tests did not pass it.
+- Accuracy hides which side a model is good at. Precision and recall showed this model is cautious about "weak" and mostly gains by recognising "not weak" episodes.
+- Error analysis before changing the model: here it points to one country and a few extreme years, not to the model's size.
 - A placebo with tuning inside every round needs no caveat; it costs time (here 100 shuffles in parallel, about 10 minutes), but it is the clean version.
 
 - Fix an outlier's problem with a rule for every country, not by dropping the country. Here the log of trade openness turned −32.4 % into +1.7 %.

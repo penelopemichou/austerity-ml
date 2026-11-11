@@ -153,6 +153,8 @@ When the best model from this step (degree 2) went through the usual tests, it b
 
 **The fake-years check on this version.** With the settings chosen fresh in every turn, 16–21 % of the fake versions do at least as well on log loss. So the small win does not come from the consolidation years; it comes from the economic conditions predicting productivity growth in general. On how often its yes/no calls are right, the same-year version again stands out (2 % of fake versions match it), for the third time on the same data. A faint hint, not a usable predictor.
 
+**Which mistakes does it make? (error analysis)** When this model says "weak growth will follow", it is right about 7 times in 10 (**precision**). But it catches fewer than half of the episodes that really were followed by weak growth (**recall**). Most of what it gets right is recognising the episodes that turned out fine. Its worst mistakes are Luxembourg's episodes: all followed by weak growth, all predicted to be fine, because Luxembourg's low debt and strong economy point that way. Next come a few deep-recession years (Latvia 2010, Estonia 2009) and high-debt episodes that turned out fine (Greece 2005 and 2022). The lesson: the model's biggest problem is one country that does not behave like the others, not the size of the model.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -193,6 +195,8 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **Training / cross-validation / test set:** countries the model learns from; countries held back to choose its settings; countries held back to report the final result (used once, at the end).
 - **J_train and J_cv:** the error on the training countries and on the cross-validation countries.
 - **High bias / high variance:** a model too simple to fit even its training data (high bias), or one that fits its training data but not new data (high variance).
+- **Precision and recall:** for a yes/no prediction, precision is how often the model is right when it says "yes"; recall is how many of the real "yes" cases it catches. F1 combines the two.
+- **Error analysis:** looking at the cases a model gets most wrong and grouping them by cause, before deciding what to change.
 - **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
 - **Learning curve:** two kinds. In Course 1, a chart of the model's error during training: it should fall, then go flat. In Course 2 Week 3, a chart of J_train and J_cv as the amount of training data grows: it shows whether more data would help.
 
