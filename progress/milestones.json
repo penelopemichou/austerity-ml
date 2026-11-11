@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-11", "step": "Course 2 Week 3 finished (error analysis, adding data, transfer learning, the ML project cycle, fairness, precision / recall / F1)"},
   {"date": "2026-11-10", "step": "Placebo on the log version: with tuning in every round, 16–21 % of shuffles do as well on log loss, so the first win in all three tests is not about consolidations"},
   {"date": "2026-11-10", "step": "Log of trade openness, as a rule for every country: the degree-2 model edges past the simple guess in all three tests for the first time (+1.7 % and +1.9 % with every country hidden in turn); placebo still to run"},
   {"date": "2026-11-10", "step": "Placebo test for the degree-2 model: not unusual on log loss (10–15 % of shuffles do as well); Luxembourg's problem traced to its very high trade openness"},

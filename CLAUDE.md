@@ -57,7 +57,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 
 ## Where I am in my learning
 
-- ML Specialization: Course 1 done (5 Nov 2026). Course 2 Weeks 1–2 done (9 Nov): neural networks, forward propagation, TensorFlow (Sequential, compile, fit), ReLU / sigmoid / linear / softmax, from_logits, Adam, backprop. Course 2 Week 3 Parts A–B done (10 Nov): train / cross-validation / test sets, model selection, bias and variance, baselines, learning curves. Next: the rest of Week 3, then Week 4 (decision trees).
+- ML Specialization: Course 1 done (5 Nov 2026). Course 2 Weeks 1–2 done (9 Nov): neural networks, forward propagation, TensorFlow (Sequential, compile, fit), ReLU / sigmoid / linear / softmax, from_logits, Adam, backprop. Course 2 Week 3 Parts A–B done (10 Nov): train / cross-validation / test sets, model selection, bias and variance, baselines, learning curves. Course 2 Week 3 done (11 Nov): also error analysis, adding data, transfer learning, the ML project cycle, fairness, and precision / recall / F1 for skewed classes. Next: Week 4 (decision trees).
 - Causal Inference: The Mixtape: Chapters 1–3 done (potential outcomes, selection bias, ATE / ATT / ATU, randomization, SUTVA, randomization inference).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
@@ -71,3 +71,4 @@ I'll paste new lines under this heading over time.
 - With a few hundred country-years, prefer simple models (logistic regression, regularization, later trees). A neural network would likely overfit.
 - Placebo idea: shuffle the episode years within each country to see how unusual the real effect is.
 - Neural network setup if one is ever used: ReLU in hidden layers, a linear output with from_logits=True, Adam. Report the parameter count against the number of training rows.
+- Before changing a model, do error analysis: list the episodes it gets most wrong and group them by cause (country, period, extreme inputs). For yes/no results, report precision and recall next to accuracy and log loss.
