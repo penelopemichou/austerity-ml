@@ -197,7 +197,20 @@
 - At the thesis's 1.5 pp flag the gap is smaller: +3.68 % vs +2.67 %. At 3.0 pp: +3.68 % vs +1.20 %.
 - **Robustness:** with medians instead of means the gap stays (3.08 % vs 0.66 %; year-adjusted 0.01 vs −0.87), and also without Greece (3.08 % vs 0.72 %; −0.41) and without Greece and Ireland (3.02 % vs 0.60 %). So it is not only Greece's 2010–11 collapse.
 - **Comparison:** the thesis's 1.5 pp flag catches the start of the episodes, but growth only falls clearly after about 3–3.5 pp. Session 2's hint of "about 3 pp" (from ΔCAPB² and the averages by band) is confirmed by a method that looks for the cut-off itself, and the cut-off barely moves when any one country is left out.
-- **But it is a description, not a predictor, and not a cause.** As a predictor the stump is no better than the training mean (each hidden in turn: +0.7 % and −1.6 %; 13 and 9 of 26 countries; 51 % and 32 % of random splits), because only 30 country-years lie above the cut and TFP growth is noisy. The 30 are mostly crisis consolidations (14 in 2008–2013; Greece 5, Cyprus 4, Slovakia 4): countries in deep trouble make the largest cuts, so selection is an obvious alternative explanation. No placebo or formal test was run on the stump's cut-off, and choosing the best of many cut-offs makes the gap look larger than it is.
+- **But it is a description, not a predictor, and not a cause.** As a predictor the stump is no better than the training mean (each hidden in turn: +0.7 % and −1.6 %; 13 and 9 of 26 countries; 51 % and 32 % of random splits), because only 30 country-years lie above the cut and TFP growth is noisy. The 30 are mostly crisis consolidations (14 in 2008–2013; Greece 5, Cyprus 4, Slovakia 4): countries in deep trouble make the largest cuts, so selection is an obvious alternative explanation.
+- **Placebo for the threshold (section 8b, added 11 Nov):** within each country, the ΔCAPB values were shuffled across years 500 times, and the stump searched all 669 country-years for its best cut each time, so the shuffles get the same "best of many cut-offs" advantage as the real data.
+
+| | Original | Year-adjusted |
+|---|---|---|
+| Real cut-off and gap (growth below minus above) | 3.45 pp, 3.40 points | 3.45 pp, 2.78 points |
+| Shuffled best-cut gap: median (middle 90 %) | −0.91 (−2.72 to +2.95) | −0.86 (−2.46 to +2.54) |
+| Shuffles with a gap at least as large | **1.6 %** (8 of 500) | **2.6 %** (13 of 500) |
+| Same, gap in either direction | 2.6 % | 4.0 % |
+| Shuffled best cut-off: median (middle 90 %) | 0.45 (−3.95 to 3.70) | 0.85 (−3.75 to 3.70) |
+
+- **The threshold is unlikely to be chance:** only 1.6 % (original) and 2.6 % (year-adjusted) of shuffled panels produce a growth gap as large as the real one, even after searching for their own best cut. This is the first result in the project to pass a placebo on its main measure.
+- **What it does and does not show.** The shuffle keeps each country's own ΔCAPB values and growth path and only breaks *when* the big tightenings happened. So the test says the link between the timing of the largest tightenings and weak growth afterwards is unlikely to be chance. It does not say the tightenings caused the slowdown: the largest cuts were made by countries in deep trouble (Greece, Cyprus, Portugal, Ireland during the crisis), and the thesis pre-trend shows consolidating countries were already diverging. The year-adjusted version removes shocks common to all countries in a year but not country-specific crises.
+- It is also still a description of 30 country-years, not a predictor (section 6).
 
 **Do trees predict better than logistic regression? (yes/no, every country hidden in turn, settings chosen in every round)**
 
@@ -251,10 +264,10 @@
 - For the LinkedIn question: in this panel, year mattered more than country, both for what the model learns and for testing it honestly.
 
 **Main lessons**
-- A threshold can be real as a description and still useless as a predictor: the 3.45 pp cut is stable across every round, but only 30 country-years lie above it.
+- A threshold can be real as a description and still useless as a predictor: the 3.45 pp cut is stable across every round and passes a placebo (1.6 % / 2.6 % of shuffles as large), but only 30 country-years lie above it.
 - Inside the consolidations, trees split on the conditions around them (inflation, debt, trade openness), never on the size of the tightening.
 - Ensembles (random forest, XGBoost) beat a single tree and, on the original target, logistic regression; the single tree is high variance.
 - The clean placebo matters again: every gain is matched by a fair share of shuffled panels, so none is about the consolidations.
 - Grouping by year is a harder and fairer test of whether a model carries over to new periods.
 
-**Next:** Course 2 is finished. Possible checks: a placebo for the stump's 3.45 pp cut-off; treating Ireland's 2015 jump like the 2010–11 accounting years. Then Course 3.
+**Next:** Course 2 is finished. Possible checks: treating Ireland's 2015 jump like the 2010–11 accounting years; the threshold with country-specific crises taken into account. Then Course 3.
