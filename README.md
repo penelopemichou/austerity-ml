@@ -36,6 +36,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 3b | `ML03b_logistic_regression_practice_completed` | C1 Week 3: my own answers to the practice exercises | All 25 checks pass |
 | 4 | `ML04_neural_network_episode_classifier` | C2 Weeks 1–2: neural networks, TensorFlow, ReLU, from_logits, Adam, softmax | See below |
 | 5a | `ML05a_evaluating_models_bias_variance` | C2 Week 3: train / cross-validation / test, bias and variance, learning curves | See below |
+| 5b | `ML05b_decision_trees_threshold` | C2 Week 4: decision trees, entropy, random forests, XGBoost, regression trees | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -88,6 +89,16 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Placebo on the log version:** with degree and λ chosen in every round, 16 % and 21 % of shuffled panels do at least as well on log loss, so the gain is not about the consolidation years. On accuracy the year-adjusted target again stands out (2 % of shuffles), the third time on the same data.
 - **Error analysis and precision / recall** (after Course 2 Week 3), for the log version with every country hidden in turn: precision for "weak" 0.71 but recall only 0.44–0.45. The model is cautious about saying "weak" and gains mostly by recognising "not weak" episodes (recall 0.80–0.81). Luxembourg's episodes are 4 of its 5 worst misses on the original target (all weak, predicted 13–19 %), adding 4.40 of excess loss against 0.59 for the next country. Deep recessions (Latvia 2010, Estonia 2009) and high-debt episodes that were not weak (Greece 2005 and 2022) come next. On the original target the gain is again mostly the 2008–2013 crisis years.
 - Verdict: the first model to beat the guess in all three tests, but not because of the consolidations. Still no usable predictor.
+
+### Session 5, Part B: decision trees (is there a large-consolidation threshold?)
+
+- **Threshold:** on all 669 country-years, average TFP growth from t−1 to t+2 is about 3.6–3.8 % for ΔCAPB up to 3 pp, then 2.1 % for 3–4.5 pp and 0.2 % above 4.5 pp. A ΔCAPB-only stump cuts at **3.45 pp** in 25 of 26 leave-one-country-out rounds (+3.69 % below vs +0.28 % above; year-adjusted +0.86 % vs −1.92 %). The gap holds with medians and without Greece. This supports Session 2's hint of about 3 pp rather than the thesis's 1.5 pp flag as the point where growth clearly falls. But only 30 country-years lie above the cut (mostly 2008–2013 crisis consolidations), the stump predicts no better than the mean (+0.7 % / −1.6 %), and selection is an obvious alternative explanation.
+- **Among the 96 episodes, trees never split on ΔCAPB** (1 of 24 rounds on the original target, 0 on the year-adjusted one); they split on lagged inflation, debt and trade openness.
+- **Prediction, every country hidden in turn (log loss vs baseline):** logistic regression +1.7 % / +1.9 %, single tree −7.4 % / −7.4 %, random forest +6.6 % / +3.0 %, XGBoost +8.3 % / +0.8 % (original / year-adjusted). Ensembles beat a single tree and, on the original target, logistic regression. XGBoost has the best balance of precision and recall for "weak" (0.67 / 0.63).
+- **Clean placebo:** 7–30 % of shuffled panels do at least as well as the ensembles, so the gain is not about the consolidations.
+- **Error analysis:** Luxembourg is again the top source of loss for logistic regression and the ensembles. Ireland's 2015 GDP jump puts TFP growth of about +25 % into the 2013–2015 windows, a data quirk to treat like the 2010–11 accounting years.
+- **Grouping by year vs country** (LinkedIn question): with year blocks held out (3-year gap), logistic regression goes from +8.7 % (country groups) to −13.2 %. Year mattered more.
+- Verdict: a stable descriptive threshold at about 3.5 pp, but no usable predictor, and ML still adds nothing reliable over the econometrics for which consolidations are followed by weak growth.
 
 ## Structure
 

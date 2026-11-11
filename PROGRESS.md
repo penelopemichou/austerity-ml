@@ -1,10 +1,10 @@
 # Progress
 
-*Last updated: 10 Nov 2026, after Session 5 Part A (evaluating models).*
+*Last updated: 11 Nov 2026, after Session 5 Part B (decision trees).*
 
 **The question:** when an EU government tightens its budget, can a simple machine-learning model predict whether productivity growth suffers afterwards? And if it can, does that mean the tightening *caused* it?
 
-**Where things stand:** Course 1 is finished, and so are Course 2 Weeks 1–3 (neural networks, then evaluating models). Four sessions are done, and the first half of Session 5 (evaluating models); decision trees come next. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. A small neural network does no better: it only looked good on one lucky split with one lucky random seed. Checking the models the Week 3 way shows they all settle at the level of the simple guess as data is added, and more flexible models only fit noise. Taking the log of trade openness, so that Luxembourg is no longer an extreme outlier, gives the first small win in all three tests, but a placebo check shows the win is not about the consolidations. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
+**Where things stand:** Courses 1 and 2 are finished, and so are five sessions. The next session will follow Course 3. The effect estimate is close to my thesis, and a data error in two controls was found and fixed along the way. Predicting a number never beat guessing the average. A yes/no model of which consolidations are followed by weak growth does not beat the simple guess either, once a leak in my code is fixed. A placebo test finds a faint pattern in the real consolidation years, far too weak to predict with. A small neural network does no better: it only looked good on one lucky split with one lucky random seed. Checking the models the Week 3 way shows they all settle at the level of the simple guess as data is added, and more flexible models only fit noise. Taking the log of trade openness, so that Luxembourg is no longer an extreme outlier, gives the first small win in all three tests, but a placebo check shows the win is not about the consolidations. Decision trees find a clear threshold: on all country-years, productivity growth afterwards falls only above about 3.5 % of GDP of tightening, but too few years lie above it to predict with. Tree ensembles beat logistic regression, though again not because of the consolidations. So far, machine learning adds nothing reliable beyond the econometrics in my thesis.
 
 ## Roadmap
 
@@ -12,7 +12,7 @@ Each session applies one week of Andrew Ng's [Machine Learning Specialization](h
 
 ```mermaid
 flowchart LR
-    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>A small neural network<br/>Course 2, Weeks 1–2"]:::done --> S5["<b>Session 5</b><br/>Part A done: evaluating models<br/>Part B next: decision trees<br/>Course 2, Weeks 3–4"]:::next
+    S1["<b>Session 1</b><br/>One input<br/>Course 1, Week 1"]:::done --> S2["<b>Session 2</b><br/>Several inputs at once<br/>Course 1, Week 2"]:::done --> S3["<b>Session 3</b><br/>A yes/no question<br/>Course 1, Week 3"]:::done --> S4["<b>Session 4</b><br/>A small neural network<br/>Course 2, Weeks 1–2"]:::done --> S5["<b>Session 5</b><br/>Evaluating models, decision trees<br/>Course 2, Weeks 3–4"]:::done --> S6["<b>Session 6</b><br/>To be planned<br/>Course 3"]:::next
     classDef done fill:#d8ecd9,stroke:#3c7a45,color:#1b3a20
     classDef next fill:#fff4d6,stroke:#b8860b,color:#4a3600
     classDef later fill:#eeeeee,stroke:#999999,color:#555555
@@ -155,6 +155,33 @@ When the best model from this step (degree 2) went through the usual tests, it b
 
 **Which mistakes does it make? (error analysis)** When this model says "weak growth will follow", it is right about 7 times in 10 (**precision**). But it catches fewer than half of the episodes that really were followed by weak growth (**recall**). Most of what it gets right is recognising the episodes that turned out fine. Its worst mistakes are Luxembourg's episodes: all followed by weak growth, all predicted to be fine, because Luxembourg's low debt and strong economy point that way. Next come a few deep-recession years (Latvia 2010, Estonia 2009) and high-debt episodes that turned out fine (Greece 2005 and 2022). The lesson: the model's biggest problem is one country that does not behave like the others, not the size of the model.
 
+### Session 5, Part B: is there a large-consolidation threshold? (decision trees)
+
+A decision tree asks one yes/no question at a time, such as "is debt above 60 % of GDP?", and picks each question to separate the outcomes as cleanly as possible.
+
+**The threshold.** Looking at every country-year (not just consolidations), average productivity growth over the next years stays around 3.6–3.8 % for everything up to about 3 % of GDP of tightening, then drops:
+
+| Budget change (% of GDP) | Loosening of more than 1.5 | −1.5 to 0 | 0 to 1.5 | 1.5 to 3 | 3 to 4.5 | More than 4.5 |
+|---|---|---|---|---|---|---|
+| Country-years | 120 | 247 | 209 | 54 | 21 | 18 |
+| Average TFP growth afterwards | 3.8 % | 3.6 % | 3.8 % | 3.6 % | 2.1 % | 0.2 % |
+
+A one-question tree on the budget change alone puts its cut at **3.45 %** almost every time, whichever country is left out. My thesis flags consolidations from 1.5 %; Session 2 hinted at about 3 %. So the size matters, but only for big tightenings. Two warnings: only 30 country-years lie above the cut, so it predicts no better than the average; and most of them are crisis-era cuts (Greece, Cyprus, Slovakia), when countries in deep trouble were forced into the biggest cuts. That is a pattern, not proof of cause.
+
+**Among consolidations, the trees never split on their size.** They split on inflation, debt and trade openness instead.
+
+**Do trees predict better?**
+
+| When every country takes a turn | Logistic regression | One tree | Random forest | XGBoost |
+|---|---|---|---|---|
+| Compared with all years: log loss vs the guess | +1.7 % | −7.4 % | +6.6 % | +8.3 % |
+| Compared with the same year | +1.9 % | −7.4 % | +3.0 % | +0.8 % |
+| Fake versions doing as well (all years / same year) | 16 % / 21 % | 50 % / 44 % | 14 % / 27 % | 7 % / 30 % |
+
+**In plain words:** many trees together (a **random forest** or **XGBoost**) do better than one tree, which is very unsteady, and better than logistic regression. But fake versions with shuffled consolidation years do almost as well, so the gain comes from the economic conditions predicting productivity, not from the consolidations.
+
+**Splitting by country or by year?** Holding out whole periods instead of whole countries turns logistic regression's gain (+9 %) into a clear loss (−13 %). The model's patterns don't carry over to a new period, so grouping by year is the harder and fairer test here.
+
 ### A data error, found and fixed
 
 Two thesis controls were built from mismatched series: trade openness mixed currencies and price bases (Sweden showed about 8 % of GDP; it is about 84 %), and inflation counted exchange-rate moves as price changes (Poland 2009 showed −16.5 %; it was +2.9 %). The panel here is now corrected. Re-running my thesis code on it leaves the main findings in place: TFP at two years moves from −1.50 % to −1.53 %. Details are in [the correction note](notes/controls_correction.md).
@@ -168,6 +195,7 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 | 3 ([notebook](notebooks/ML03_logistic_regression_episode_classifier.ipynb), [log](notes/session03_log.md)) | Predicted a yes/no answer (below-median TFP growth after a consolidation) with logistic regression, tried several regularization strengths, and repeated the unseen-country tests. | No gain over the simple guess once a leak in how λ was chosen is fixed. A placebo test finds a faint pattern in the real consolidation years, too weak to predict with. **Leakage can hide in the tuning step, and a model can predict for the wrong reason.** |
 | 4 ([notebook](notebooks/ML04_neural_network_episode_classifier.ipynb), [log](notes/session04_log.md)) | Trained a tiny neural network on the same yes/no question, chose its size and λ on the training countries only, compared it with logistic regression, and checked how much the random seed matters. | No gain: worse than the simple guess when every country takes a turn. One good seed on one split was luck. **On little data, a more flexible model adds parameters, not information.** |
 | 5a ([notebook](notebooks/ML05a_evaluating_models_bias_variance.ipynb), [log](notes/session05_log.md)) | Compared errors on training and held-back countries for simple and curved logistic regression, drew learning curves, and ran the cross-validation choice through the usual tests. | The models settle at the simple guess as data is added; more flexibility only fits noise. **The limit is the information in the data, not the model.** |
+| 5b ([notebook](notebooks/ML05b_decision_trees_threshold.ipynb), [log](notes/session05_log.md)) | Trained a single decision tree, a random forest and XGBoost on the yes/no question, and a regression tree and a one-split tree on all country-years to look for a threshold, with the same tests and a clean placebo. | Growth falls clearly only above about 3.5 % of GDP of tightening, but too few cases lie above it to predict with. Tree ensembles beat logistic regression, but not because of the consolidations. **A real pattern can still be useless for prediction.** |
 | 3b ([practice notebook](notebooks/ML03b_logistic_regression_practice.ipynb)) | Exercises to write the sigmoid, cost, gradient and gradient descent myself, draw a decision boundary, and watch a wiggly curve overfit, each checked against scikit-learn. | Done: see my completed version below. |
 | 3b, completed ([notebook](notebooks/ML03b_logistic_regression_practice_completed.ipynb)) | My own answers to the three practice exercises. | All 25 checks pass against scikit-learn. |
 
@@ -197,6 +225,9 @@ Two thesis controls were built from mismatched series: trade openness mixed curr
 - **High bias / high variance:** a model too simple to fit even its training data (high bias), or one that fits its training data but not new data (high variance).
 - **Precision and recall:** for a yes/no prediction, precision is how often the model is right when it says "yes"; recall is how many of the real "yes" cases it catches. F1 combines the two.
 - **Error analysis:** looking at the cases a model gets most wrong and grouping them by cause, before deciding what to change.
+- **Decision tree:** a model that asks one yes/no question at a time about the inputs and ends in groups; it picks each question to separate the outcomes as cleanly as possible (*entropy* measures how mixed a group is; *information gain* is how much a question reduces it).
+- **Random forest / XGBoost:** many trees combined. A random forest averages trees trained on resampled data; XGBoost builds trees one after another, each fixing the earlier ones' mistakes.
+- **Regression tree / stump:** a tree that predicts a number instead of yes/no; a stump is a tree with a single question.
 - **Pre-trend:** how a country was already doing before the budget tightening. If it was already falling behind, a later slowdown is not all caused by the tightening.
 - **Learning curve:** two kinds. In Course 1, a chart of the model's error during training: it should fall, then go flat. In Course 2 Week 3, a chart of J_train and J_cv as the amount of training data grows: it shows whether more data would help.
 

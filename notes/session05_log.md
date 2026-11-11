@@ -168,3 +168,93 @@
 - Fix an outlier's problem with a rule for every country, not by dropping the country. Here the log of trade openness turned −32.4 % into +1.7 %.
 
 **Next:** Part B after Course 2 Week 4: decision trees, to test whether there is a large-consolidation threshold, using the log of trade openness and the clean placebo from the start.
+
+## Part B: decision trees (11 Nov 2026)
+
+**Course:** Machine Learning Specialization, Course 2 Week 4 (decision trees, entropy, information gain, continuous features, regression trees, random forests, XGBoost)
+
+**Questions:** is there a large-consolidation threshold? Do trees predict better than logistic regression?
+
+**Setup, decided before fitting:**
+- Yes/no models on the 96 episodes, both targets (original and year-adjusted), inputs ΔCAPB and the four lagged controls with inflation capped at ±30 % and the log of trade openness (Session 5a's rule; for trees the log changes nothing, because a tree only uses the order of values).
+- Every episode has ΔCAPB ≥ 1.5, so the threshold question also uses all 669 country-years: a regression tree for TFP growth itself (training-mean baseline), linear regression side by side, and a ΔCAPB-only stump (one split, at least 20 country-years each side).
+- Models: single decision tree (entropy; depth 1–4, at least 5–20 per leaf), random forest (100 trees; depth 2–4, leaf 5–20), XGBoost (50 trees, learning rate 0.1; depth 1–3, minimum child weight 1 or 5), Session 5a's logistic regression side by side. Settings chosen with 4 groups of training countries; tree leaf chances smoothed as (k + 1) / (n + 2).
+- Same three tests; precision and recall; clean placebo (100 shuffles, settings chosen in every round) for all models; error analysis; optional comparison of country, year and random-row splits. Full run about 52 minutes (most of it the placebo).
+
+**The trees: no ΔCAPB split among consolidations**
+- Original target (six-hidden training countries): depth 2, root *inflation ≤ 1.73 %*. Low inflation: 17 of 24 not weak. Higher inflation with debt above 61.75 % of GDP: all 16 weak.
+- Year-adjusted: depth 1, root *log trade openness ≤ 4.408* (about 82 % of GDP). Less open economies: 19 of 24 weak; more open: 20 of 47 weak.
+- Across the rounds with each country hidden: the root is trade openness 14 times, GDP growth 7 times and debt 3 times (original), and trade openness 22 times, debt twice (year-adjusted). ΔCAPB is used in **1 of 24 rounds** (original, at 3.45 pp) and **never** on the year-adjusted target. Among consolidations, the size of the tightening does not sort weak from not weak; the conditions around it do.
+
+**The threshold: on all country-years, a stable cut at about 3.5 pp**
+
+| ΔCAPB band (pp of GDP) | < −1.5 | −1.5 to 0 | 0 to 1.5 | 1.5 to 3 | 3 to 4.5 | > 4.5 |
+|---|---|---|---|---|---|---|
+| Country-years | 120 | 247 | 209 | 54 | 21 | 18 |
+| Average TFP growth, t−1 to t+2 | 3.8 % | 3.6 % | 3.8 % | 3.6 % | 2.1 % | 0.2 % |
+
+- The ΔCAPB stump cuts at **3.45 pp** in 25 of 26 rounds (original target; the other at 3.35) and in 17 of 26 (year-adjusted; median 3.45). Below the cut: average growth +3.69 % (639 country-years); above: +0.28 % (30). Year-adjusted: +0.86 % vs −1.92 %.
+- At the thesis's 1.5 pp flag the gap is smaller: +3.68 % vs +2.67 %. At 3.0 pp: +3.68 % vs +1.20 %.
+- **Robustness:** with medians instead of means the gap stays (3.08 % vs 0.66 %; year-adjusted 0.01 vs −0.87), and also without Greece (3.08 % vs 0.72 %; −0.41) and without Greece and Ireland (3.02 % vs 0.60 %). So it is not only Greece's 2010–11 collapse.
+- **Comparison:** the thesis's 1.5 pp flag catches the start of the episodes, but growth only falls clearly after about 3–3.5 pp. Session 2's hint of "about 3 pp" (from ΔCAPB² and the averages by band) is confirmed by a method that looks for the cut-off itself, and the cut-off barely moves when any one country is left out.
+- **But it is a description, not a predictor, and not a cause.** As a predictor the stump is no better than the training mean (each hidden in turn: +0.7 % and −1.6 %; 13 and 9 of 26 countries; 51 % and 32 % of random splits), because only 30 country-years lie above the cut and TFP growth is noisy. The 30 are mostly crisis consolidations (14 in 2008–2013; Greece 5, Cyprus 4, Slovakia 4): countries in deep trouble make the largest cuts, so selection is an obvious alternative explanation. No placebo or formal test was run on the stump's cut-off, and choosing the best of many cut-offs makes the gap look larger than it is.
+
+**Do trees predict better than logistic regression? (yes/no, every country hidden in turn, settings chosen in every round)**
+
+| | Logistic regression | Decision tree | Random forest | XGBoost |
+|---|---|---|---|---|
+| Original: log loss vs baseline (0.694) | 0.682 (+1.7 %) | 0.745 (−7.4 %) | 0.648 (**+6.6 %**) | 0.637 (**+8.3 %**) |
+| Original: countries won | 16 of 24 | 9 of 24 | 16 of 24 | 16 of 24 |
+| Original: 500 splits better | 84 % | 35 % | 78 % | 63 % |
+| Original: placebo, shuffles at least as good | 16 % | 50 % | 14 % | 7 % |
+| Year-adjusted: log loss vs baseline (0.700) | 0.686 (+1.9 %) | 0.751 (−7.4 %) | 0.678 (+3.0 %) | 0.694 (+0.8 %) |
+| Year-adjusted: countries won | 13 of 24 | 9 of 24 | 15 of 24 | 9 of 24 |
+| Year-adjusted: 500 splits better | 64 % | 54 % | 72 % | 58 % |
+| Year-adjusted: placebo, shuffles at least as good | 21 % | 44 % | 27 % | 30 % |
+
+- Six hidden countries (log loss vs baseline): original 0.620 / 0.758 / 0.623 / 0.701 vs 0.710; year-adjusted 0.594 / 0.571 / 0.613 / 0.589 vs 0.718. The single tree's 80 % accuracy on the year-adjusted six (vs 40 %) collapses with every country hidden in turn (−7.4 %, 9 of 24): one split, one lucky result.
+- **The ensembles beat logistic regression on the original target** (+6.6 % and +8.3 % vs +1.7 %), and the random forest is the steadiest on the year-adjusted target (+3.0 %, 15 of 24, 72 % of splits). The single tree loses: it is high variance, as the course warns.
+- **The placebo says it is not about the consolidations.** Even the best (XGBoost, original target) is matched by 7 % of shuffled panels, the random forest by 14 % and 27 %. Shuffling ΔCAPB keeps the controls and the timing, and the shuffled panels do almost as well: the gain comes from the economic conditions (inflation, debt, trade openness, growth) predicting TFP growth, and on the original target partly from the crisis years.
+
+**Precision and recall ("weak" = positive, every country hidden in turn)**
+
+| | Logistic regression | Decision tree | Random forest | XGBoost | Simple guess |
+|---|---|---|---|---|---|
+| Original: accuracy | 62.5 % | 50.0 % | 62.5 % | 65.6 % | 49.0 % |
+| Original: precision / recall (weak) | 0.71 / 0.45 | 0.51 / 0.53 | 0.64 / 0.61 | 0.67 / 0.63 | 0.50 / 0.90 |
+| Original: F1 (weak) | 0.55 | 0.52 | 0.63 | 0.65 | 0.64 |
+| Year-adjusted: accuracy | 61.5 % | 54.2 % | 57.3 % | 64.6 % | 42.7 % |
+| Year-adjusted: precision / recall (weak) | 0.71 / 0.44 | 0.58 / 0.44 | 0.60 / 0.54 | 0.67 / 0.62 | 0.46 / 0.54 |
+| Year-adjusted: F1 (weak) | 0.54 | 0.50 | 0.57 | 0.65 | 0.50 |
+
+- Logistic regression stays cautious about "weak" (high precision, low recall). XGBoost and the random forest are more balanced: they catch about 6 in 10 weak episodes at a similar precision. On F1 for "weak", no model is clearly above the simple guess on the original target (XGBoost 0.65 vs 0.64), because the guess says "weak" almost every time; on the year-adjusted target XGBoost (0.65) and the random forest (0.57) are above it (0.50).
+
+**Regression (TFP growth itself, all country-years, every country hidden in turn)**
+- Squared error vs the training mean (29.5 original, 23.0 year-adjusted): linear regression −2.7 % / −2.9 % (15 and 17 of 26 countries), regression tree −12.9 % / +1.4 % (12 and 15 of 26), ΔCAPB stump +0.7 % / −1.6 % (13 and 9 of 26). Placebo: regression tree 52 % / 16 % of shuffles as good, linear regression 12 % / 4 %.
+- None predicts TFP growth better than the mean. The regression tree's root is lagged inflation in 25 of 26 rounds (original), lagged GDP growth in 22 of 26 (year-adjusted).
+
+**Error analysis**
+- **Luxembourg is again the top country** for logistic regression, the random forest and XGBoost on the original target (+4.40, +1.72 and +1.80 of excess loss), and for XGBoost on the year-adjusted target. Its weak episodes get only 13–22 % chance of weak.
+- The single tree's worst misses are different (Finland 1998 and 2000, Romania 2013, Latvia 2000, all given 86–89 % chance of weak and not weak), a sign of its instability. On the year-adjusted target the trees' worst miss is Spain 2013 (given 89–93 %, not weak).
+- By period (original target), the ensembles gain most in 2008–2013 (random forest 0.588 vs 0.692; XGBoost 0.612) but also in 1997–2007 (XGBoost 0.620 vs 0.695); in 2014–2022 they roughly tie with the guess.
+- **A data quirk found here:** the regression tree's largest errors include Ireland 2013, 2014 and 2020 (TFP growth +25.1 %, +22.5 %, +24.0 %). Ireland's 2015 GDP jump (multinational accounting) puts very large TFP growth into every window covering 2015. This is not productivity, and like Ireland 2010–11 it should be treated with care. Bulgaria 1997, Greece 2010 and Romania 2002 are the other big misses.
+
+**Optional: grouping the held-out data by country, by year, or by random rows (original target, settings fixed)**
+
+| | Random rows | By country | By year (3-year gap) | By country and year |
+|---|---|---|---|---|
+| Logistic regression: log loss vs baseline | +9.1 % | +8.7 % | **−13.2 %** | −11.2 % |
+| Decision tree | −1.0 % | −9.0 % | −8.6 % | +2.2 % |
+
+- For logistic regression, **holding out whole periods is what kills the gain**: grouped by country it looks good (+8.7 %), grouped by year it is clearly worse than the baseline (−13.2 %). The model's gain relies on patterns shared across countries within a period; it does not carry over to a new period. Random rows look only slightly better than country groups here, so in this data the overlapping windows leak less than the shared years do.
+- (These use fixed settings and 6 country groups, so "by country" is not the same number as the every-country-hidden-in-turn result above.) The single tree is too unstable to read anything from.
+- For the LinkedIn question: in this panel, year mattered more than country, both for what the model learns and for testing it honestly.
+
+**Main lessons**
+- A threshold can be real as a description and still useless as a predictor: the 3.45 pp cut is stable across every round, but only 30 country-years lie above it.
+- Inside the consolidations, trees split on the conditions around them (inflation, debt, trade openness), never on the size of the tightening.
+- Ensembles (random forest, XGBoost) beat a single tree and, on the original target, logistic regression; the single tree is high variance.
+- The clean placebo matters again: every gain is matched by a fair share of shuffled panels, so none is about the consolidations.
+- Grouping by year is a harder and fairer test of whether a model carries over to new periods.
+
+**Next:** Course 2 is finished. Possible checks: a placebo for the stump's 3.45 pp cut-off; treating Ireland's 2015 jump like the 2010–11 accounting years. Then Course 3.
