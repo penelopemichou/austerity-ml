@@ -23,6 +23,7 @@ You (Claude) write the code. I'm a beginner in Python (comfortable with statisti
   - Ireland 2010–11 (ΔCAPB −18.8 / +18.2) is bank-rescue accounting, not fiscal policy.
   - Cyprus 2013 is +12.0.
   - Bulgaria's 1997 inflation is about 1,040 %. Session 3 caps inflation at ±30 %, decided before fitting.
+  - Ireland's 2015 GDP jump (multinational accounting, not productivity) puts TFP growth of about +22–25 % into the 2013–2015 target windows. Treat it like the 2010–11 accounting years.
 
 ## Rules we've used so far
 
