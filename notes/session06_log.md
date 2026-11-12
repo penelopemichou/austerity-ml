@@ -93,12 +93,14 @@
 |---|---|---|---|---|---|
 | All (Session 5B) | 3.45 pp: +3.69 % vs +0.28 % | 3.40 | 1.6 % | 3.45 pp, 2.78 | 2.6 % |
 | Without flagged windows | 3.45 pp: +3.41 % vs +0.28 % | 3.13 | 0.4 % | 3.45 pp, 2.55 | 1.0 % |
+| Without Greece only | 3.45 pp: gap only | 2.25 | **14.2 %** | **−0.15 pp**, 0.84 | **36.6 %** |
+| Without Greece and Ireland 2013 onwards | 1.85 pp | 1.57 | 13.4 % | 0.75 pp, 1.04 | 22.2 % |
 | Without flagged windows and Greece | **1.85 pp**: +3.52 % vs +2.04 % | 1.47 | **18.2 %** | **0.75 pp**, 0.94 | **25.0 %** |
 
 - **The flagged windows do not matter:** without Ireland 2013 onwards and Romania 2000–2002, the bands above 3 pp and the 3.45 pp cut are unchanged, and the placebo is even clearer (0.4 % and 1.0 %).
-- **Greece does:** without it, the stump's best cut moves to 1.85 pp (original) and 0.75 pp (year-adjusted), the gap shrinks to 1.47 and 0.94 points, and the placebo no longer stands out (18 % and 25 % of shuffles do as well). The top band rises from 0.16 % to 2.59 %, because Greece 2010 and 2011 (−16.9 % and −16.5 %) are in it.
+- **Greece does:** in every version without Greece the placebo no longer stands out (13–37 % of shuffles do as well). The cut itself is less steady than the placebo: on the original target it stays at 3.45 pp without Greece alone (gap 2.25) and moves to 1.85 pp only when Ireland's post-2013 windows go too; year-adjusted it moves with Greece alone (−0.15 pp). With Greece and the flagged windows out, the top band rises from 0.16 % to 2.59 %, because Greece 2010 and 2011 (−16.9 % and −16.5 %) were in it.
 - At a fixed 3.45 pp cut, growth above it is still lower without Greece (mean 1.48 % vs 3.45 %, median 0.72 % vs 3.03 %, year-adjusted −0.48 vs +0.71), so large consolidations were still followed by weaker growth. But without Greece the bands look more like a general step down for all consolidations (2–2.8 % from 1.5 pp up, against 3.2–3.8 % for other years) than a sharp drop above about 3.5 pp.
-- **This corrects Session 5B:** its robustness check measured the gap at a fixed 3.45 pp cut and found it held without Greece, but did not let the cut move. Letting it move shows that the 3.45 pp threshold, and its placebo pass, rest on Greece's crisis years.
+- **This corrects Session 5B:** its robustness check measured the gap at a fixed 3.45 pp cut and found it held without Greece, but did not let the cut move. Rerunning the placebo without Greece shows that the threshold's placebo pass rests on Greece's crisis years; where the best cut lands without Greece depends on the measure and on Ireland's post-2013 windows.
 
 *2. Session 6's K = 2 groups: growth after consolidations minus each group's normal growth* (Session 6 sample; "normal" = average over all country-years of the group; year-adjusted = minus the median across countries in the same year).
 
@@ -118,6 +120,6 @@
 - With five labelled anomalies, precision and recall rest on very few cases; ε is a judgement call as much as a calculation.
 - Anomaly detection is a useful data check: it confirmed the known quirks and found two new ones that the source data confirms (Ireland 2020–21, Romania 2002), plus one that turned out to be real (Estonia 1997).
 - Clustering and anomaly detection describe the data; they say nothing about whether consolidations cause weaker growth.
-- A robustness check should let the result move, not only test it at a fixed value: the 3.45 pp cut held at a fixed cut without Greece, but the best cut moved away once it could.
+- A robustness check should rerun the whole test, not only look at one number: without Greece the original-target cut stays at 3.45 pp, but the placebo fails (14 %).
 
 **Next:** Course 3 Week 2 (recommender systems).
