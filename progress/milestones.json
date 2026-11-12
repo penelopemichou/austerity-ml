@@ -1,7 +1,8 @@
 [
+  {"date": "2026-11-12", "step": "Correction: the 3.45 pp threshold's placebo pass rests on Greece 2010–11. Without Greece (and the flagged Irish and Romanian windows) the best cut moves to 1.85 pp and the placebo fails (18 % / 25 % of shuffles); see notes/session06_log.md, commit 989a61b"},
   {"date": "2026-11-12", "step": "Session 6 finished: two stable country groups (old core vs catching-up and small open economies); the anomaly detector catches 4 of 5 known data quirks and points to new ones to check"},
   {"date": "2026-11-12", "step": "Course 3 Week 1 videos finished (k-means clustering, anomaly detection)"},
-  {"date": "2026-11-11", "step": "Placebo for the 3.45 pp threshold: only 1.6 % / 2.6 % of shuffled panels show a growth gap as large, the first result to pass a placebo on its main measure"},
+  {"date": "2026-11-11", "step": "Placebo for the 3.45 pp threshold: only 1.6 % / 2.6 % of shuffled panels show a growth gap as large, the first result to pass a placebo on its main measure (corrected 12 Nov: this rests on Greece 2010–11)"},
   {"date": "2026-11-11", "step": "Session 5 Part B finished: growth falls clearly only above about 3.5 pp of tightening (stable cut-off, but too few cases to predict); random forest and XGBoost beat logistic regression, but not because of the consolidations"},
   {"date": "2026-11-11", "step": "Course 2 videos finished (decision trees, entropy, information gain, random forests, XGBoost)"},
   {"date": "2026-11-11", "step": "Error analysis and precision / recall for the Session 5 model: cautious about \"weak\" (precision 0.71, recall 0.45); Luxembourg's episodes are its worst misses"},
