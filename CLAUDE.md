@@ -24,6 +24,8 @@ You (Claude) write the code. I'm a beginner in Python (comfortable with statisti
   - Cyprus 2013 is +12.0.
   - Bulgaria's 1997 inflation is about 1,040 %. Session 3 caps inflation at ±30 %, decided before fitting.
   - Ireland's 2015 GDP jump (multinational accounting, not productivity) puts TFP growth of about +22–25 % into the 2013–2015 target windows. Treat it like the 2010–11 accounting years.
+  - Ireland's TFP is driven by multinational accounting more generally: one-year TFP growth of +11.0 % in 2020 and +10.9 % in 2021 (GDP +7.2 % in 2020, when most EU economies shrank), and smaller jumps in 2014 and 2017. Treat Irish TFP after about 2014 with care, especially the 2018–2021 target windows.
+  - Romania 2002: TFP +12.2 % while GDP grew 5.7 %, because employment falls 10.6 % in one year in the data. Most likely a break in the employment series (2002 census), not productivity. It affects the 2000–2002 target windows.
 
 ## Rules we've used so far
 

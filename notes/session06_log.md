@@ -64,12 +64,27 @@
 - **Large budget swings:** Cyprus 2013 (ΔCAPB +12.0, already in CLAUDE.md's watch-outs) and Lithuania 1997 (ΔCAPB −9.6).
 - **Possible data quirks worth checking:** one-year TFP jumps of +11.0 % in Ireland 2020 and +10.9 % in 2021 (likely the same multinational accounting as 2015), +12.2 % in Romania 2002 and +10.5 % in Estonia 1997.
 
+**Checking the new flags against the source (added 12 Nov 2026)**
+- The panel's TFP matches the AMECO series (ZVGDF) exactly in the thesis's raw files, so none of these jumps comes from processing. Splitting GDP growth into output per worker and employment shows what drives each:
+
+| | TFP growth | Output per worker | GDP growth | Implied employment change | Verdict |
+|---|---|---|---|---|---|
+| Ireland 2020 | +11.0 % | +9.4 % | +7.2 % | −2.3 % | multinational accounting |
+| Ireland 2021 | +10.9 % | +8.7 % | +16.3 % | +7.5 % | multinational accounting |
+| Romania 2002 | +12.2 % | +16.3 % | +5.7 % | −10.6 % | most likely an employment-series break |
+| Estonia 1997 | +10.5 % | +11.8 % | +12.3 % | +0.5 % | real catch-up growth |
+
+- **Ireland 2020–21:** the same problem as 2015. Irish GDP reflects multinationals' accounts (intellectual property, contract manufacturing, pharma exports during COVID), not domestic productivity; GDP grew 7 % in 2020 when most EU economies shrank. Smaller jumps in 2014 (+6.3 %) and 2017 (+5.5 %) follow the same pattern.
+- **Romania 2002:** GDP grew a normal 5.7 %, but employment would have had to fall 10.6 % in one year for TFP to jump 12 %. That fits a statistical revision of the employment figures (Romania's 2002 census), not a real fall; not yet confirmed against Eurostat's notes.
+- **Estonia 1997:** GDP really grew about 12 % with employment flat: genuine fast catch-up growth, not a data problem.
+- Both artefacts are now in CLAUDE.md's data watch-outs. They feed into the TFP growth target for Ireland's 2018–2021 windows and Romania's 2000–2002 windows.
+
 **Main lessons**
 - K-means always finds groups; whether they mean anything is shown by stability. Here K = 2 is solid, and from K = 4 the groups depend on the random start.
 - Choosing K by purpose matters more than the elbow, which had no clear bend after K = 2.
 - A Gaussian per feature catches years that are extreme on one feature (Bulgaria 1997, Ireland), but misses years that are unusual only as a combination (Greece 2010).
 - With five labelled anomalies, precision and recall rest on very few cases; ε is a judgement call as much as a calculation.
-- Anomaly detection is a useful data check: it confirmed the known quirks and pointed to new ones (Ireland 2020–21, Romania 2002) to look at before any future model uses those years.
+- Anomaly detection is a useful data check: it confirmed the known quirks and found two new ones that the source data confirms (Ireland 2020–21, Romania 2002), plus one that turned out to be real (Estonia 1997).
 - Clustering and anomaly detection describe the data; they say nothing about whether consolidations cause weaker growth.
 
-**Next:** Course 3 Week 2 (recommender systems). Before that, possibly check the new TFP jumps (Ireland 2020–21, Romania 2002, Estonia 1997) against the AMECO source.
+**Next:** Course 3 Week 2 (recommender systems).
