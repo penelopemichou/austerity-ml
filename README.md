@@ -37,6 +37,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 4 | `ML04_neural_network_episode_classifier` | C2 Weeks 1–2: neural networks, TensorFlow, ReLU, from_logits, Adam, softmax | See below |
 | 5a | `ML05a_evaluating_models_bias_variance` | C2 Week 3: train / cross-validation / test, bias and variance, learning curves | See below |
 | 5b | `ML05b_decision_trees_threshold` | C2 Week 4: decision trees, entropy, random forests, XGBoost, regression trees | See below |
+| 6 | `ML06_kmeans_anomaly_detection` | C3 Week 1: k-means clustering, anomaly detection | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -100,6 +101,14 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Error analysis:** Luxembourg is again the top source of loss for logistic regression and the ensembles. Ireland's 2015 GDP jump puts TFP growth of about +25 % into the 2013–2015 windows, a data quirk to treat like the 2010–11 accounting years.
 - **Grouping by year vs country** (LinkedIn question): with year blocks held out (3-year gap), logistic regression goes from +8.7 % (country groups) to −13.2 %. Year mattered more.
 - Verdict: a stable threshold at about 3.5 pp that passes a placebo, but descriptive, not causal, and no usable predictor; and ML still adds nothing reliable over the econometrics for which consolidations are followed by weak growth.
+
+### Session 6: natural groups and strange years (k-means and anomaly detection)
+
+- **K-means** (my own code, 100 random starts, same cost as scikit-learn) on country averages of log trade openness, debt, capped inflation and GDP growth, z-scored. The elbow bends only at K = 2. **K = 2 is the stable grouping:** an older core (Austria, Belgium, Croatia, Denmark, Finland, France, Germany, Greece, Italy, Netherlands, Portugal, Spain, Sweden: less open, debt 78 %, growth 1.7 %) vs catching-up and small open economies (the other 13: trade 142 % of GDP, debt 42 %, growth 3.6 %). Every seed finds it, and hiding any country changes it in only 3 of 26 rounds. K = 3–5 split off Bulgaria/Hungary/Romania (inflation), Greece/Italy (debt) and Cyprus/Ireland/Luxembourg/Malta (openness), but from K = 4 the answer depends on the random seed.
+- **TFP growth after consolidations by group (description):** 1.44 % in the older core vs 3.87 % in the catching-up group, largely their normal growth (1.68 % and 5.55 %). Greece and Italy: −2.53 % after 10 episodes.
+- **Anomaly detection** (Gaussian per feature on 60 % of ordinary country-years; inflation, trade openness and debt transformed; ε tuned by F1 on a cross-validation set with the 5 known quirks): flags Bulgaria 1997 and Ireland 2010, 2011 and 2015 and nothing else (precision 1.00, recall 0.80); misses Greece 2010, which is unusual only as a combination. Catching it too means flagging 19 country-years (precision 0.26).
+- **New flags:** the 2009 Baltic crash, transition inflation (Romania 1997, Bulgaria 1996), Greek crisis years, Cyprus 2013, and one-year TFP jumps in Ireland 2020–21 (+11 %), Romania 2002 (+12 %) and Estonia 1997 (+10.5 %) worth checking in the source.
+- Verdict: useful descriptions and a useful data check; nothing about cause, and no new predictor.
 
 ## Structure
 
