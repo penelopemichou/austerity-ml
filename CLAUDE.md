@@ -60,7 +60,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 
 ## Where I am in my learning
 
-- ML Specialization: Course 1 done (5 Nov 2026). Course 2 done (11 Nov). Course 3 Weeks 1–2 videos done (12 Nov): k-means, anomaly detection, collaborative filtering (learned features, mean normalization, cold start), content-based filtering (two networks, dot product, retrieval and ranking), PCA (principal components, explained variance, projection, reconstruction).
+- ML Specialization: all videos done (14 Nov). Course 3 Week 3: reinforcement learning (states, actions, rewards, return and discount factor, policy, MDP, Q(s, a), Bellman equation, DQN with replay buffer, ε-greedy, mini-batches, soft updates).
 - Causal Inference: The Mixtape: Chapters 1–3 done (potential outcomes, selection bias, ATE / ATT / ATU, randomization, SUTVA, randomization inference).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 

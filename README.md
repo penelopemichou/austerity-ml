@@ -2,6 +2,35 @@
 
 Learning machine learning step by step on a real research dataset: the EU country panel from my MSc thesis at TU Delft (*Austerity and Europe's Structural Trajectory*, 2026). I am working through Andrew Ng's Machine Learning Specialization alongside it, and every notebook applies what that week of the course covers.
 
+## Wrap-up: Sessions 1–7
+
+| Session | Question | Method | Honest result | Lesson |
+|---|---|---|---|---|
+| 1 (Course 1, Week 1) | Does the size of a budget tightening (ΔCAPB) predict TFP growth over the next years? | Linear regression with my own gradient descent (same as OLS), then country and year fixed effects | A real effect (slope −0.27 with fixed effects, t ≈ 3; −0.89 % per average consolidation, against −1.50 % in the thesis), but as a predictor only 1.2 % better than the average on six hidden countries, and better in 13 of 26 countries | Significant is not the same as predictive |
+| 2 (Course 1, Week 2) | Do the thesis controls and the episode flag help? | Several inputs, z-scores on training countries only, vectorized gradient descent, ΔCAPB² | The effect moved close to the thesis (−1.52 %), but prediction did not improve: +8.6 % on six hidden countries, −48.7 % with each country hidden in turn. Checking the inputs exposed a real data error in two thesis controls, now fixed (the thesis's TFP result moves from −1.50 % to −1.53 %) | One test can flatter a model; looking hard at the inputs pays |
+| 3 (Course 1, Week 3) | Can a yes/no model tell which consolidations are followed by below-median TFP growth? | Logistic regression, λ chosen inside training countries, a year-adjusted target, a pre-trend input, a placebo test | After fixing a leak in how λ was chosen: no better than always guessing the most common answer (log loss −5.2 %, −2.5 % year-adjusted, with each country hidden in turn). The placebo found only a faint pattern in accuracy | Leakage can hide in the tuning step; timing can fake a signal |
+| 4 (Course 2, Weeks 1–2) | Does a small neural network do better? | TensorFlow network (ReLU, linear output with from_logits, Adam, L2), size and λ chosen on training countries, several random seeds | Worse than the guess with each country hidden in turn (−10.0 %, −1.9 % year-adjusted). A 72 % accuracy on six hidden countries came from one lucky seed | On little data, a more flexible model adds parameters, not information |
+| 5a (Course 2, Week 3) | Why do the models not beat the guess? | Training vs cross-validation error, learning curves, placebo tests, the log of trade openness as a rule for every country, error analysis, precision and recall | Regularized models settle at the guess as data is added; flexible ones overfit. The log of trade openness gave the first model to beat the guess in all three tests (+1.7 %, +1.9 %), but a clean placebo shows the gain is not about the consolidations. Luxembourg caused the worst errors | The limit is the information in the data, not the model; handle an extreme country with a rule, not by dropping it |
+| 5b (Course 2, Week 4) | Is there a large-consolidation threshold, and do trees predict better? | Decision tree, random forest, XGBoost, a regression tree and a one-split ΔCAPB tree on all country-years, clean placebo, folds grouped by year | Random forest and XGBoost beat logistic regression (+6.6 %, +8.3 %), but not because of the consolidations. A cut at 3.45 pp passes a placebo only with Greece 2010–11 in the data (without Greece, 14–37 % of shuffles match it). Among consolidations, trees never split on their size. Holding out whole periods turns a +8.7 % gain into −13.2 % | A pattern can rest on one country; rerun the whole check, not one number |
+| 6 (Course 3, Week 1) | Do countries fall into natural groups? Does the data flag the strange years? | My own k-means with 100 random starts; Gaussian anomaly detection tuned on the known quirks | Two stable groups: an older core (less open, more debt, slow growth) and catching-up or small open economies. The anomaly detector caught 4 of 5 known quirks, missed Greece 2010, and found two new data artefacts (Ireland 2020–21, Romania 2002) | Clustering and anomaly detection describe and check the data; they do not explain it |
+| 7 (Course 3, Week 2) | What do the countries look like in one picture? Can learned features fill gaps in TFP growth? | PCA; collaborative filtering with my own cost, GradientTape and Adam, against country average + year average | Two components capture 81 % of how countries differ, and the first is the two-group split. Learned features beat the averages only once the data artefacts are removed (better in 8 of 10 tries, median +2.1 %) | A few extreme numbers can drown a weak pattern |
+
+**Bottom line:** across seven sessions, machine learning never produced a reliable predictor of which consolidations are followed by weaker growth, and nothing in it says what consolidations *cause*. What it did add: a corrected data error in the thesis controls, a list of data artefacts, honest tests that caught my own mistakes (a tuning leak, a threshold resting on one country), and clear descriptions of how the countries differ. Session 8 explains why reinforcement learning cannot be used on this kind of data; see [notes/rl_and_observational_data.md](notes/rl_and_observational_data.md).
+
+**Data artefacts and extreme values found**
+
+| Country-year(s) | What | Kind | How it was handled |
+|---|---|---|---|
+| All countries | Trade openness and inflation built from mismatched series (currencies, price bases) | Error in the thesis panel | Corrected on 2 Nov 2026 ([correction note](notes/controls_correction.md)) |
+| Ireland 2010–11 | ΔCAPB −18.8 and +18.2 | Bank-rescue accounting, not fiscal policy | Flagged; the ΔCAPB² result was checked without them (Session 2) |
+| Ireland 2015 | GDP +24.6 %, TFP +19.8 % | Multinational accounting, not productivity | Flagged; dropped in checks |
+| Ireland 2020–21 (and smaller in 2014, 2017) | One-year TFP growth +11.0 % and +10.9 % | Multinational accounting | Found by anomaly detection (Session 6); flagged |
+| Romania 2002 | TFP +12.2 % while GDP grew 5.7 % | Employment falls 10.6 % in one year in the data: most likely a series break | Found by anomaly detection (Session 6); flagged |
+| Bulgaria 1997 | Inflation about 1,040 % | Real hyperinflation, but an extreme input | Capped at ±30 % in models |
+| Cyprus 2013 | ΔCAPB +12.0 | Real, but extreme | Flagged |
+| Luxembourg, all years | Trade openness 240–376 % of GDP | Real, but far outside the other countries, so models had to extrapolate | Log of trade openness for every country |
+| Greece 2010–11 | TFP growth −16.9 % and −16.5 % | Real crisis | Kept; the 3.45 pp threshold rests on these years |
+
 ## The question
 
 Can a simple ML model predict which fiscal consolidations are followed by weaker long-run growth? And is a good predictor the same thing as a cause?
@@ -39,6 +68,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 5b | `ML05b_decision_trees_threshold` | C2 Week 4: decision trees, entropy, random forests, XGBoost, regression trees | See below |
 | 6 | `ML06_kmeans_anomaly_detection` | C3 Week 1: k-means clustering, anomaly detection | See below |
 | 7 | `ML07_pca_collaborative_filtering` | C3 Week 2: PCA, collaborative filtering (TensorFlow GradientTape) | See below |
+| 8 | `ML08_toy_mars_rover_value_iteration` (toy, not thesis data) + [note](notes/rl_and_observational_data.md) | C3 Week 3: reinforcement learning | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -120,6 +150,12 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Related countries:** by learned features, unstable across random starts (19 % the same) because λ = 30 shrinks the features to near zero; by PCA position, stable (94 % unchanged without the artefacts): Greece with Italy, France and Portugal; Ireland with Luxembourg, Malta and Slovakia.
 - **Without the artefacts** (Bulgaria 1997, Ireland 2015, 2020–21, Romania 2002), PCA barely changes (positions correlate 0.997 and 0.994); only the collaborative filtering result changes.
 - Verdict: useful pictures and a small gap-filling gain once the data is cleaned; nothing about consolidations or cause.
+
+### Session 8: reinforcement learning (why it does not fit this data)
+
+- Reinforcement learning learns by trying actions in an environment and observing rewards. The thesis panel is history: each country-year happened once, with the budget choice a government actually made, so no other actions can be tried. Governments consolidated when in trouble, so the "actions" are not random, and the "reward" (TFP growth afterwards) is exactly the outcome whose causes are in question. The full argument, and what causal inference would need instead, is in [notes/rl_and_observational_data.md](notes/rl_and_observational_data.md).
+- **Practice notebook, a toy example and not thesis data:** value iteration on the course's Mars rover (6 states, rewards 100 and 40). With γ = 0.5, Q(4, left) = 12.5 and all eight Q values for states 2–5 match the course. The policy is ← ← ← → for states 2–5; with γ = 0.3, state 4 also turns right; with γ = 0.9, every state goes left.
+- Verdict: the method does not fit the question; the wrap-up at the top summarises Sessions 1–7.
 
 ## Structure
 
