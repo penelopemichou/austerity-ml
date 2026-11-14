@@ -1,4 +1,6 @@
 [
+  {"date": "2026-11-14", "step": "Session 7 finished: two principal components capture 81 % of how countries differ; collaborative filtering beats country + year averages only once the data artefacts are removed (8 of 10 hides, median +2.1 %)"},
+  {"date": "2026-11-14", "step": "Course 3 Week 2 videos finished (collaborative filtering, content-based filtering, PCA)"},
   {"date": "2026-11-12", "step": "Correction: the 3.45 pp threshold's placebo pass rests on Greece 2010–11. Without Greece (and the flagged Irish and Romanian windows) the best cut moves to 1.85 pp and the placebo fails (18 % / 25 % of shuffles); see notes/session06_log.md, commit 989a61b"},
   {"date": "2026-11-12", "step": "Session 6 finished: two stable country groups (old core vs catching-up and small open economies); the anomaly detector catches 4 of 5 known data quirks and points to new ones to check"},
   {"date": "2026-11-12", "step": "Course 3 Week 1 videos finished (k-means clustering, anomaly detection)"},

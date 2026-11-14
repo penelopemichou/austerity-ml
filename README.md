@@ -38,6 +38,7 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 | 5a | `ML05a_evaluating_models_bias_variance` | C2 Week 3: train / cross-validation / test, bias and variance, learning curves | See below |
 | 5b | `ML05b_decision_trees_threshold` | C2 Week 4: decision trees, entropy, random forests, XGBoost, regression trees | See below |
 | 6 | `ML06_kmeans_anomaly_detection` | C3 Week 1: k-means clustering, anomaly detection | See below |
+| 7 | `ML07_pca_collaborative_filtering` | C3 Week 2: PCA, collaborative filtering (TensorFlow GradientTape) | See below |
 
 ### Session 1: one-variable linear regression (ΔCAPB → TFP growth, t−1 to t+2)
 
@@ -110,6 +111,15 @@ A plain-language overview with a roadmap and the results so far is in [PROGRESS.
 - **Anomaly detection** (Gaussian per feature on 60 % of ordinary country-years; inflation, trade openness and debt transformed; ε tuned by F1 on a cross-validation set with the 5 known quirks): flags Bulgaria 1997 and Ireland 2010, 2011 and 2015 and nothing else (precision 1.00, recall 0.80); misses Greece 2010, which is unusual only as a combination. Catching it too means flagging 19 country-years (precision 0.26).
 - **New flags:** the 2009 Baltic crash, transition inflation (Romania 1997, Bulgaria 1996), Greek crisis years, Cyprus 2013, and one-year TFP jumps in Ireland 2020–21 (+11 %), Romania 2002 (+12 %) and Estonia 1997 (+10.5 %) worth checking in the source.
 - Verdict: useful descriptions and a useful data check; nothing about cause, and no new predictor.
+
+### Session 7: the countries in one picture, and filling gaps in TFP growth (PCA and collaborative filtering)
+
+- **PCA on country averages** (Session 6's z-scored inputs): PC1 55.5 %, PC2 26.0 % (81 % together). PC1 is the older-core vs catching-up axis (GDP growth +0.57, debt −0.56, log trade openness +0.51); Session 6's two groups separate cleanly along it, with Greece and Italy furthest left. PC2 is mostly inflation (+0.83), with Romania alone at the top.
+- **PCA on 754 country-years** (ΔCAPB left out): PC1 (41.5 %) is boom vs bust (GDP and TFP growth), PC2 (23.5 %) debt vs trade openness. Consolidation episodes are spread through the cloud, slightly towards bad years; the flagged artefacts sit at the edges.
+- **Collaborative filtering** on the 26 × 29 table of one-year TFP growth (own cost, GradientTape and Adam; 1–3 learned features and λ chosen by 5-fold cross-validation inside the training cells; 10 random 20 % hides): mean squared error 6.11 vs 6.03 for *country average + year average* (better in 4 of 10 hides, median gain 0 %). **Without the artefacts:** 3.93 vs 4.08, better in 8 of 10 hides (median +2.1 %). The year average does most of the work (country average alone: 7.90).
+- **Related countries:** by learned features, unstable across random starts (19 % the same) because λ = 30 shrinks the features to near zero; by PCA position, stable (94 % unchanged without the artefacts): Greece with Italy, France and Portugal; Ireland with Luxembourg, Malta and Slovakia.
+- **Without the artefacts** (Bulgaria 1997, Ireland 2015, 2020–21, Romania 2002), PCA barely changes (positions correlate 0.997 and 0.994); only the collaborative filtering result changes.
+- Verdict: useful pictures and a small gap-filling gain once the data is cleaned; nothing about consolidations or cause.
 
 ## Structure
 

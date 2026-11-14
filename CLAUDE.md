@@ -60,7 +60,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 
 ## Where I am in my learning
 
-- ML Specialization: Course 1 done (5 Nov 2026). Course 2 done (11 Nov). Course 3 Week 1 videos done (12 Nov): k-means clustering (random starts, choosing K by purpose) and anomaly detection (Gaussian per feature, p(x) < ε, tuning ε on a few known anomalies, transforming features to look more Gaussian).
+- ML Specialization: Course 1 done (5 Nov 2026). Course 2 done (11 Nov). Course 3 Weeks 1–2 videos done (12 Nov): k-means, anomaly detection, collaborative filtering (learned features, mean normalization, cold start), content-based filtering (two networks, dot product, retrieval and ranking), PCA (principal components, explained variance, projection, reconstruction).
 - Causal Inference: The Mixtape: Chapters 1–3 done (potential outcomes, selection bias, ATE / ATT / ATU, randomization, SUTVA, randomization inference).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
