@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-14", "step": "Causal Inference: The Mixtape, Chapters 1–4 finished (DAGs, backdoor criterion, colliders and bad controls)"},
   {"date": "2026-11-14", "step": "Session 8 finished: why reinforcement learning does not fit an observational panel, a wrap-up of Sessions 1–7 with all data artefacts, and a toy value-iteration notebook (Mars rover)"},
   {"date": "2026-11-14", "step": "All Machine Learning Specialization videos finished"},
   {"date": "2026-11-14", "step": "Session 7 finished: two principal components capture 81 % of how countries differ; collaborative filtering beats country + year averages only once the data artefacts are removed (8 of 10 hides, median +2.1 %)"},
