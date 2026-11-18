@@ -61,7 +61,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 ## Where I am in my learning
 
 - ML Specialization: all videos done (14 Nov). Course 3 Week 3: reinforcement learning (states, actions, rewards, return and discount factor, policy, MDP, Q(s, a), Bellman equation, DQN with replay buffer, ε-greedy, mini-batches, soft updates).
-- Causal Inference: The Mixtape: Chapters 1–4 done (potential outcomes, randomization, SUTVA, randomization inference, DAGs, backdoor criterion, colliders and bad controls).
+- Causal Inference: The Mixtape: Chapters 1–5 done (potential outcomes, randomization, DAGs, backdoor criterion, colliders, unconfoundedness and common support, ATE/ATT/ATU, matching, propensity scores, regression adjustment, placebo tests).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
 ## From my learning notes
