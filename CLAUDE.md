@@ -61,7 +61,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 ## Where I am in my learning
 
 - ML Specialization: all videos done (14 Nov). Course 3 Week 3: reinforcement learning (states, actions, rewards, return and discount factor, policy, MDP, Q(s, a), Bellman equation, DQN with replay buffer, ε-greedy, mini-batches, soft updates).
-- Causal Inference: The Mixtape: Chapters 1–5 done (potential outcomes, randomization, DAGs, backdoor criterion, colliders, unconfoundedness and common support, ATE/ATT/ATU, matching, propensity scores, regression adjustment, placebo tests).
+- Causal Inference: The Mixtape: Chapters 1–7 done (potential outcomes, randomization, DAGs, backdoor criterion, colliders, unconfoundedness and common support, ATE/ATT/ATU, matching, propensity scores, regression adjustment, placebo tests, regression discontinuity (RDD), instrumental variables).
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
 ## From my learning notes
@@ -75,3 +75,4 @@ I'll paste new lines under this heading over time.
 - Placebo idea: shuffle the episode years within each country to see how unusual the real effect is.
 - Neural network setup if one is ever used: ReLU in hidden layers, a linear output with from_logits=True, Adam. Report the parameter count against the number of training rows.
 - Before changing a model, do error analysis: list the episodes it gets most wrong and group them by cause (country, period, extreme inputs). For yes/no results, report precision and recall next to accuracy and log loss.
+- Mixtape Chapters 1–7 read (DAGs, unconfoundedness, RDD, instrumental variables); narrative consolidations could be an instrument for ΔCAPB, but only with a strong first stage and a credible exclusion story.
