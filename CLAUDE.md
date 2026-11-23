@@ -12,6 +12,12 @@ You (Claude) write the code. I'm a beginner in Python (comfortable with statisti
 - I work in Google Colab. Notebooks load the data from the repo's raw GitHub URL, so "Run all" works for anyone.
 - Say plainly when ML adds nothing over my econometrics.
 
+## Running notebooks locally
+
+- Colab is the main way to run the notebooks. For local checks there is a Python 3.12 (Homebrew) venv in `.venv/` (not in git), with packages pinned in `requirements.txt`; the setup commands are at the top of that file.
+- **Run notebooks with the project kernel**, e.g. `.venv/bin/jupyter nbconvert --to notebook --execute --ExecutePreprocessor.kernel_name=austerity-ml …`. A user-level kernel called `python3` (in `~/Library/Jupyter/kernels/`) points to a temporary venv that no longer exists and takes priority over the venv's own. The notebooks' own metadata stays `python3`, so Colab keeps working.
+- Checked on 24 Nov 2026: ML06 run on the project kernel gives text output identical to the saved notebook.
+
 ## Data
 
 - `data/panel_master.csv`: 26 EU countries (EU minus Czech Republic), 1995–2024. Definitions are in `data/DATA_DICTIONARY.csv` and sources and licences in `data/README.md`.
@@ -61,7 +67,7 @@ Taken from PROGRESS.md and the session logs in `notes/`.
 ## Where I am in my learning
 
 - ML Specialization: all videos done (14 Nov). Course 3 Week 3: reinforcement learning (states, actions, rewards, return and discount factor, policy, MDP, Q(s, a), Bellman equation, DQN with replay buffer, ε-greedy, mini-batches, soft updates).
-- Causal Inference: The Mixtape: finished, Chapters 1–11 (24 Nov). Potential outcomes, randomization, DAGs, backdoor criterion, colliders, unconfoundedness and common support, ATE/ATT/ATU, matching, propensity scores, regression adjustment, placebo tests, regression discontinuity (RDD), instrumental variables, panel data and fixed effects, difference-in-differences (including staggered timing and its forbidden comparisons), synthetic control.
+- Causal Inference: The Mixtape: finished on 24 Nov 2026 (Chapters 1–11). Chapters 1–7: potential outcomes, randomization, DAGs, backdoor criterion, colliders, unconfoundedness and common support, ATE/ATT/ATU, matching, propensity scores, regression adjustment, placebo tests, regression discontinuity (RDD), instrumental variables. Chapter 8: panel data. Chapter 9: difference-in-differences. Chapter 10: staggered difference-in-differences. Chapter 11: synthetic control.
 - Use only methods I've covered so far. When a session needs something new, explain it simply first.
 
 ## From my learning notes

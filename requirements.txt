@@ -1,0 +1,21 @@
+# For running the notebooks locally (Colab already has these packages).
+# Python 3.12 (Homebrew). Set up with:
+#   /opt/homebrew/bin/python3.12 -m venv .venv
+#   .venv/bin/pip install -r requirements.txt
+#   .venv/bin/python -m ipykernel install --sys-prefix --name austerity-ml --display-name "Python 3.12 (austerity-ml)"
+# pandas is kept below 3 (Colab still runs pandas 2); NumPy below 2.5 to go with pandas 2.3.
+# scikit-learn 1.6.1 and TensorFlow 2.20 are the versions Sessions 3-7 were run with.
+# xgboost on a Mac also needs: brew install libomp
+numpy==2.4.6
+pandas==2.3.3
+scipy==1.18.1
+scikit-learn==1.6.1
+statsmodels==0.15.0
+matplotlib==3.11.2
+tensorflow==2.20.0
+xgboost==3.4.1
+joblib==1.6.0
+ipykernel==7.4.0
+nbformat==5.11.1
+nbclient==0.11.0
+nbconvert==7.17.2

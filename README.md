@@ -164,6 +164,7 @@ notebooks/   one Colab notebook per session (ML01_, ML02_, ...), plus practice n
 data/        analysis panel and source notes
 notes/       learning logs
 progress/    session plan, results and log (feed PROGRESS.md and my dashboard)
+requirements.txt   pinned packages for running the notebooks locally (Colab needs none)
 ```
 
 ## Author
