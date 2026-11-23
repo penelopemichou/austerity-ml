@@ -1,4 +1,5 @@
 [
+  {"date": "2026-11-24", "step": "Causal Inference: The Mixtape finished, Chapters 1–11 (panel data, difference-in-differences with staggered timing, synthetic control)"},
   {"date": "2026-11-19", "step": "Causal Inference: The Mixtape, Chapters 6–7 finished (regression discontinuity, instrumental variables)"},
   {"date": "2026-11-18", "step": "Causal Inference: The Mixtape, Chapter 5 finished (matching, propensity scores, unconfoundedness and common support, ATE/ATT/ATU)"},
   {"date": "2026-11-14", "step": "Causal Inference: The Mixtape, Chapters 1–4 finished (DAGs, backdoor criterion, colliders and bad controls)"},
